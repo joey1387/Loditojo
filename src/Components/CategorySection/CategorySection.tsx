@@ -1,4 +1,4 @@
-import "./CategorySection.css";
+// import "./CategorySection.css";
 import { products } from "../../data/products";
 import { useNavigate } from "react-router-dom";
 
