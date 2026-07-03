@@ -1,0 +1,65 @@
+.checkout-page{
+    padding:80px 8%;
+    background:#F8F4FF;
+    min-height:100vh;
+}
+
+.checkout-page h1{
+    text-align:center;
+    margin-bottom:50px;
+    color:#111827;
+}
+
+.checkout-container{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:40px;
+}
+
+.checkout-form,
+.payment-section{
+    background:white;
+    padding:35px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+
+.checkout-form h2,
+.payment-section h2{
+    margin-bottom:25px;
+}
+
+.checkout-form input,
+.checkout-form textarea{
+    width:100%;
+    padding:16px;
+    margin-bottom:20px;
+    border:2px solid #E5E7EB;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+}
+
+.checkout-form textarea{
+    height:120px;
+    resize:none;
+}
+
+.payment-section label{
+    display:block;
+    margin-bottom:20px;
+    font-size:17px;
+}
+
+.place-order{
+    width:100%;
+    padding:18px;
+    margin-top:30px;
+    border:none;
+    border-radius:12px;
+    background:#16A34A;
+    color:white;
+    font-size:18px;
+    font-weight:700;
+    cursor:pointer;
+}

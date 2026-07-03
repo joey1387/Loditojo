@@ -1,0 +1,69 @@
+.featured-products{
+
+    padding:90px 8%;
+
+}
+
+.featured-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:50px;
+
+}
+
+.section-tag{
+
+    color:#6C2BD9;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    margin-bottom:10px;
+
+}
+
+.featured-header h2{
+
+    font-size:2.7rem;
+
+}
+
+.featured-header button{
+
+    background:#6C2BD9;
+
+    color:white;
+
+    border:none;
+
+    padding:14px 28px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.featured-header button:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.featured-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+
+    gap:30px;
+
+}

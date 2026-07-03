@@ -1,0 +1,162 @@
+.product-card{
+    position:relative;
+    overflow:hidden;
+    width:100%;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+    transition:.35s;
+    cursor:pointer;
+}
+.product-card:hover{
+    transform:translateY(-12px);
+    box-shadow:0 25px 45px rgba(108,43,217,.18);
+}
+
+.product-card img{
+
+    width:100%;
+    height:220px;
+
+    object-fit:cover;
+
+     transition:.4s ease;
+
+}
+.product-card:hover img {
+  transform: scale(1.08);
+}
+
+.card-content{
+    padding:24px;
+}
+
+.category {
+  display: inline-block;
+  background: #ede9fe;
+  color: #6c2bd9;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.product-card h3{
+    margin:12px 0;
+    font-size:1.35rem;
+    color:#111827;
+    font-weight:700;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #f59e0b;
+  margin-bottom: 10px;
+}
+
+.price{
+    color:#6C2BD9;
+    font-size:1.6rem;
+    font-weight:700;
+    margin:15px 0;
+}
+
+.in-stock {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.out-stock {
+  color: crimson;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+.card-content{
+    display:flex;
+    flex-direction:column;
+}
+.product-card button{
+
+    width:100%;
+
+    margin-top:20px;
+
+    height:52px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#6C2BD9;
+
+    color:white;
+
+    font-weight:600;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.product-card button:hover{
+
+    transform:translateY(-3px);
+
+    background:#5822b6;
+
+}
+.product-card button:hover{
+    background:#16A34A;
+    transform:translateY(-2px);
+}
+
+.product-card button:active{
+    transform:scale(.97);
+}
+
+.product-card button:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.product-card button:active {
+  transform: scale(1.2);
+  background-color: #6c2bd9;
+}
+
+.featured-badge{
+
+    position:absolute;
+
+    top:18px;
+
+    left:18px;
+
+    background:#6C2BD9;
+
+    color:white;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    z-index:5;
+
+}
