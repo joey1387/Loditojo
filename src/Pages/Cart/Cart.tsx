@@ -11,23 +11,29 @@ const Cart = () => {
     decreaseQuantity,
   } = useCart();
 
-  
-
   const subtotal = cart.reduce(
-  (total, item) => total + item.price * item.quantity,
-  0
-);
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
 
-const deliveryFee = subtotal > 0 ? 5000 : 0;
+  const deliveryFee =
+    subtotal > 0 ? 5000 : 0;
 
-const total = subtotal + deliveryFee;
+  const total =
+    subtotal + deliveryFee;
 
   if (cart.length === 0) {
     return (
       <div className="empty-cart">
         <AiOutlineShoppingCart size={80} />
+
         <h2>Your Cart is Empty</h2>
-        <p>Looks like you haven't added any products yet.</p>
+
+        <p>
+          Looks like you haven't added any
+          products yet.
+        </p>
 
         <Link to="/shop">
           <button className="shop-btn">
@@ -37,7 +43,6 @@ const total = subtotal + deliveryFee;
       </div>
     );
   }
-  
 
   return (
     <div className="cart-page">
@@ -46,7 +51,7 @@ const total = subtotal + deliveryFee;
       </h1>
 
       <div className="cart-container">
-        {/* LEFT SIDE */}
+
         <div className="cart-items">
           {cart.map((item) => (
             <div
@@ -100,35 +105,42 @@ const total = subtotal + deliveryFee;
           ))}
         </div>
 
-       {/* RIGHT SIDE */}
-<div className="cart-summary">
+        <div className="cart-summary">
+          <h2>Order Summary</h2>
 
-  <h2>Order Summary</h2>
+          <div className="summary-row">
+            <span>Subtotal</span>
 
-  <div className="summary-row">
-    <span>Subtotal</span>
-    <span>₦{subtotal.toLocaleString()}</span>
-  </div>
+            <span>
+              ₦{subtotal.toLocaleString()}
+            </span>
+          </div>
 
-  <div className="summary-row">
-    <span>Delivery</span>
-    <span>₦{deliveryFee.toLocaleString()}</span>
-  </div>
+          <div className="summary-row">
+            <span>Delivery</span>
 
-  <hr />
+            <span>
+              ₦{deliveryFee.toLocaleString()}
+            </span>
+          </div>
 
-  <div className="summary-total">
-    <span>Total</span>
-    <span>₦{total.toLocaleString()}</span>
-  </div>
+          <hr />
 
-  <Link to="/checkout">
-    <button className="checkout-btn">
-      Proceed to Checkout
-    </button>
-  </Link>
+          <div className="summary-total">
+            <span>Total</span>
 
-</div>
+            <span>
+              ₦{total.toLocaleString()}
+            </span>
+          </div>
+
+          <Link to="/checkout">
+            <button className="checkout-btn">
+              Proceed to Checkout
+            </button>
+          </Link>
+        </div>
+
       </div>
     </div>
   );

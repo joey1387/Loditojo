@@ -15,6 +15,12 @@ import Success from "./src/Pages/Success/Success";
 import Footer from './src/Components/Footer/Footer';
 import About from "./src/Pages/About/About";
 import Contact from "./src/Pages/Contact/Contact";
+import ForgotPassword from "./src/Pages/ForgotPassword/ForgotPassword";
+import VerifyOTP from "./src/Pages/VerifyOTP/VerifyOTP";
+import ResetPassword from "./src/Pages/ResetPassword/ResetPassword";
+import Wishlist from "./src/Pages/Wishlist/Wishlist";
+import Compare from "./src/Pages/Compare/Compare";
+import AIChat from "./src/Components/AIChat/AIChat";
 
 function App() {
   return (
@@ -32,14 +38,29 @@ function App() {
     </ProtectedRoute>
   }
 />
+<Route
+  path="/compare"
+  element={<Compare />}
+/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/success" element={<Success />} />
+        <Route
+   path="/wishlist"
+   element={<Wishlist />}
+/>
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
+      <AIChat />
+      
       <Footer />
     </>
   );

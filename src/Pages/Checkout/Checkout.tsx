@@ -1,174 +1,172 @@
 import "./Checkout.css";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-
+  const { cart, clearCart } = useCart();
   const navigate = useNavigate();
 
-  const { cart } = useCart();
+ const subtotal = cart.reduce(
+  (total, item) => total + item.price * item.quantity,
+  0
+);
 
-  const [payment, setPayment] = useState("Paystack");
+  const shipping = subtotal > 0 ? 5000 : 0;
 
-  const subtotal = cart.reduce(
-    (total, item) =>
-      total + item.price * item.quantity,
-    0
-  );
-
-  const deliveryFee = subtotal > 0 ? 5000 : 0;
-
-  const total = subtotal + deliveryFee;
-
-  const handleOrder = () => {
-    navigate("/success");
-  };
+  const total = subtotal + shipping;
 
   return (
+    <section className="checkout-page">
 
-    <div className="checkout-page">
-
-      <h1>Checkout</h1>
+      <h1>Secure Checkout</h1>
 
       <div className="checkout-container">
 
-        <div className="checkout-form">
+        {/* LEFT */}
 
-          <h2>Shipping Information</h2>
+        <div className="checkout-left">
 
-          <input
-            type="text"
-            placeholder="Full Name"
-          />
+          <div className="checkout-card">
 
-          <input
-            type="email"
-            placeholder="Email Address"
-          />
+            <h2>Delivery Information</h2>
 
-          <input
-            type="tel"
-            placeholder="Phone Number"
-          />
+            <input type="text" placeholder="Full Name" />
 
-          <input
-            type="text"
-            placeholder="State"
-          />
+            <input type="email" placeholder="Email Address" />
 
-          <input
-            type="text"
-            placeholder="City"
-          />
+            <input type="tel" placeholder="Phone Number" />
 
-          <input
-            type="text"
-            placeholder="Delivery Address"
-          />
+            <input type="text" placeholder="Street Address" />
 
-          <textarea
-            placeholder="Order Note (Optional)"
-          />
+            <div className="double-input">
+
+              <input type="text" placeholder="City" />
+
+              <input type="text" placeholder="State" />
+
+            </div>
+
+                <input
+                  type="text"
+                  defaultValue="Nigeria"
+                  readOnly
+                />
+
+            <textarea placeholder="Additional Information"></textarea>
+
+          </div>
+
+          <div className="checkout-card">
+
+            <h2>Payment Method</h2>
+
+            <label>
+              <input
+                type="radio"
+                name="payment"
+                defaultChecked
+              />
+              Paystack
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="payment"
+              />
+              Flutterwave
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                name="payment"
+              />
+              Cash on Delivery
+            </label>
+
+          </div>
 
         </div>
 
-        <div className="payment-section">
+        {/* RIGHT */}
 
-          <h2>Order Summary</h2>
+        <div className="checkout-right">
 
-          <div className="summary-row">
-            <span>Items</span>
-            <span>{cart.length}</span>
+          <div className="checkout-card">
+
+            <h2>Order Summary</h2>
+
+            {cart.map((item) => (
+
+              <div
+                key={item.key}
+                className="summary-item"
+              >
+
+                <img
+                  src={item.image}
+                  alt={item.name}
+                />
+
+                <div>
+
+                 <h4>{item.name}</h4>
+
+                    <p>
+                      Qty: {item.quantity}
+                    </p>
+
+                    <p>
+                      ₦{(item.price * item.quantity).toLocaleString()}
+                    </p>
+
+                </div>
+
+              </div>
+
+            ))}
+
+            <hr />
+
+            <div className="summary-row">
+              <span>Subtotal</span>
+              <strong>₦{subtotal.toLocaleString()}</strong>
+            </div>
+
+            <div className="summary-row">
+              <span>Delivery</span>
+              <strong>₦{shipping.toLocaleString()}</strong>
+            </div>
+
+            <div className="summary-row total">
+              <span>Total</span>
+              <strong>₦{total.toLocaleString()}</strong>
+            </div>
+
+           <button
+  className="place-order"
+  onClick={() => {
+
+    toast.success("Order placed successfully!");
+
+clearCart();
+
+navigate("/success");
+  }}
+>
+  Place Order
+</button>
+
           </div>
-
-          <div className="summary-row">
-            <span>Subtotal</span>
-            <span>
-              ₦{subtotal.toLocaleString()}
-            </span>
-          </div>
-
-          <div className="summary-row">
-            <span>Delivery</span>
-            <span>
-              ₦{deliveryFee.toLocaleString()}
-            </span>
-          </div>
-
-          <hr />
-
-          <div className="summary-total">
-            <span>Total</span>
-
-            <span>
-              ₦{total.toLocaleString()}
-            </span>
-          </div>
-
-          <h2
-            style={{ marginTop: "30px" }}
-          >
-            Payment Method
-          </h2>
-
-          <label>
-
-            <input
-              type="radio"
-              checked={payment === "Paystack"}
-              onChange={() =>
-                setPayment("Paystack")
-              }
-            />
-
-            Paystack
-
-          </label>
-
-          <label>
-
-            <input
-              type="radio"
-              checked={payment === "Flutterwave"}
-              onChange={() =>
-                setPayment("Flutterwave")
-              }
-            />
-
-            Flutterwave
-
-          </label>
-
-          <label>
-
-            <input
-              type="radio"
-              checked={payment === "Cash"}
-              onChange={() =>
-                setPayment("Cash")
-              }
-            />
-
-            Cash on Delivery
-
-          </label>
-
-          <button
-            className="place-order"
-            onClick={handleOrder}
-          >
-            Place Order
-          </button>
 
         </div>
 
       </div>
 
-    </div>
-
+    </section>
   );
-
 };
 
 export default Checkout;

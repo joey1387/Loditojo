@@ -4,34 +4,36 @@ import { FaCheckCircle } from "react-icons/fa";
 
 const Success = () => {
   return (
-    <div className="success-page">
+    <section className="success-page">
+      <div className="success-card">
+        <FaCheckCircle className="success-icon" />
 
-      <FaCheckCircle className="success-icon" />
+        <h1>Payment Successful!</h1>
 
-      <h1>Order Placed Successfully!</h1>
+        <p>
+          Thank you for shopping with <strong>Loditojo Gadgets.</strong>
+        </p>
 
-      <p>
-        Thank you for shopping with Loditojo Gadgets.
-        Your order has been received and is being processed.
-      </p>
+        <p>
+          Your order has been received successfully and is now being processed.
+          You will receive updates as soon as your order is confirmed.
+        </p>
 
-      <div className="success-buttons">
+        <div className="success-buttons">
+          <Link to="/shop">
+            <button className="continue-btn">
+              Continue Shopping
+            </button>
+          </Link>
 
-        <Link to="/shop">
-          <button className="continue-btn">
-            Continue Shopping
-          </button>
-        </Link>
-
-        <Link to="/">
-          <button className="home-btn">
-            Back to Home
-          </button>
-        </Link>
-
+          <Link to="/">
+            <button className="home-btn">
+              Back to Home
+            </button>
+          </Link>
+        </div>
       </div>
-
-    </div>
+    </section>
   );
 };
 

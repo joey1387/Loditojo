@@ -1,0 +1,99 @@
+:root{
+  --bg:#ffffff;
+  --card:#ffffff;
+  --surface:#F8F4FF;
+  --text:#111827;
+  --text2:#6B7280;
+  --primary:#6C2BD9;
+  --secondary:#16A34A;
+  --border:#E5E7EB;
+}
+
+body[data-theme="dark"]{
+  --bg:#0F172A;
+  --card:#1E293B;
+  --surface:#273449;
+  --text:#F8FAFC;
+  --text2:#CBD5E1;
+  --primary:#8B5CF6;
+  --secondary:#22C55E;
+  --border:#334155;
+}
+
+*{
+  transition:
+    background-color .3s,
+    color .3s,
+    border-color .3s;
+}
+
+html,
+body,
+#root{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+}
+
+section,
+main,
+footer,
+nav,
+aside{
+  background:transparent;
+}
+
+h1,h2,h3,h4,h5,h6{
+  color:var(--text);
+}
+
+p,
+span,
+small,
+label{
+  color:var(--text2);
+}
+
+input,
+textarea,
+select{
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+button{
+  transition:.3s;
+}
+
+.card,
+.product-card,
+.review-card,
+.checkout-card,
+.compare-product,
+.cart-item,
+.wishlist-item,
+.specifications-card,
+.delivery-card,
+.quickview-modal,
+.mini-cart{
+  background:var(--card)!important;
+  color:var(--text)!important;
+}
+
+.product-image,
+.hero,
+.category-card{
+  background:var(--surface)!important;
+}
+
+a{
+  color:inherit;
+}

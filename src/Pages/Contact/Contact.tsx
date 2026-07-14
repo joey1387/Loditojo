@@ -21,11 +21,11 @@ const Contact = () => {
           <h2>Get In Touch</h2>
 
           <p>
-            📍 Benin City, Edo State, Nigeria
+            📍 Enugu, Enugu State, Nigeria
           </p>
 
           <p>
-            📞 +234 XXX XXX XXXX
+            📞 +234 000 000 000
           </p>
 
           <p>

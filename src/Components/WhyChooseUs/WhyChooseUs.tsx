@@ -1,33 +1,86 @@
 import "./WhyChooseUs.css";
 import {
-  FaTruck,
   FaShieldAlt,
+  FaTruck,
   FaHeadset,
   FaMedal,
+  FaCheckCircle,
 } from "react-icons/fa";
 
 const WhyChooseUs = () => {
   return (
     <section className="why-us">
 
-      <div className="why-header">
+      <div className="why-left">
 
-        <p>WHY CHOOSE US</p>
+        <span className="why-tag">
+          WHY CHOOSE LODITOJO
+        </span>
 
         <h2>
-          Why Thousands Trust
-          Loditojo Gadgets
+          Experience Shopping
+          Without Worries
         </h2>
+
+        <p className="why-description">
+          We believe buying gadgets should be easy,
+          secure and enjoyable. From authentic products
+          to nationwide delivery, we've built an experience
+          customers can trust.
+        </p>
+
+        <div className="why-list">
+
+          <div>
+            <FaCheckCircle />
+            <span>100% Genuine Products</span>
+          </div>
+
+          <div>
+            <FaCheckCircle />
+            <span>Nationwide Fast Delivery</span>
+          </div>
+
+          <div>
+            <FaCheckCircle />
+            <span>Secure Online Payments</span>
+          </div>
+
+          <div>
+            <FaCheckCircle />
+            <span>Easy Returns & Warranty</span>
+          </div>
+
+        </div>
+
+        <div className="why-stats">
+
+          <div>
+            <h3>10K+</h3>
+            <p>Happy Customers</p>
+          </div>
+
+          <div>
+            <h3>500+</h3>
+            <p>Products</p>
+          </div>
+
+          <div>
+            <h3>99%</h3>
+            <p>Satisfaction</p>
+          </div>
+
+        </div>
 
       </div>
 
-      <div className="why-grid">
+      <div className="why-right">
 
         <div className="why-card">
           <FaShieldAlt />
-          <h3>100% Genuine</h3>
+          <h3>Authentic Products</h3>
           <p>
-            Every gadget is authentic and sourced from trusted suppliers.
+            Every item is sourced from verified distributors.
           </p>
         </div>
 
@@ -35,7 +88,7 @@ const WhyChooseUs = () => {
           <FaTruck />
           <h3>Fast Delivery</h3>
           <p>
-            Nationwide delivery with reliable logistics partners.
+            Reliable delivery to every state in Nigeria.
           </p>
         </div>
 
@@ -43,15 +96,15 @@ const WhyChooseUs = () => {
           <FaHeadset />
           <h3>24/7 Support</h3>
           <p>
-            Friendly customer support whenever you need assistance.
+            Friendly experts ready to help you anytime.
           </p>
         </div>
 
         <div className="why-card">
           <FaMedal />
-          <h3>Best Prices</h3>
+          <h3>Best Value</h3>
           <p>
-            Competitive pricing without compromising quality.
+            Premium gadgets at competitive prices.
           </p>
         </div>
 

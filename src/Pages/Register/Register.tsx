@@ -1,42 +1,145 @@
 import "./Register.css";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { registerUser } from "../../api/authApi";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const [fullName, setFullName] =
+    useState("");
+
+  const [email, setEmail] =
+    useState("");
+
+  const [phone, setPhone] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [confirmPassword, setConfirmPassword] =
+    useState("");
+
+  const [street, setStreet] =
+    useState("");
+
+  const [city, setCity] =
+    useState("");
+
+  const [state, setState] =
+    useState("");
+
+  const [country, setCountry] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const response = await registerUser({
+        name: fullName,
+        email,
+        password,
+        phone,
+        address: {
+          street,
+          city,
+          state,
+          country,
+        },
+      });
+
+      toast.success(
+        response.message ||
+          "Registration successful"
+      );
+
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Registration failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="auth-page">
-
       <div className="auth-card">
-
         <h1>Create Account</h1>
 
-        <p>
-          Join Loditojo Gadgets today.
-        </p>
+        <p>Join Loditojo Gadgets today.</p>
 
-       <form className="auth-form" autoComplete="off">
-
+        <form
+          className="auth-form"
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
           <input
             type="text"
             placeholder="Full Name"
+            value={fullName}
+            onChange={(e) =>
+              setFullName(e.target.value)
+            }
+            required
           />
 
           <input
             type="email"
             placeholder="Email Address"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            required
           />
 
           <input
             type="tel"
             placeholder="Phone Number"
+            value={phone}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            required
           />
 
           <input
             type="password"
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) =>
+              setConfirmPassword(
+                e.target.value
+              )
+            }
+            required
           />
 
           <h3>Delivery Address</h3>
@@ -44,53 +147,70 @@ const Register = () => {
           <input
             type="text"
             placeholder="Street"
+            value={street}
+            onChange={(e) =>
+              setStreet(e.target.value)
+            }
+            required
           />
 
           <div className="address-row">
-
             <input
               type="text"
               placeholder="City"
+              value={city}
+              onChange={(e) =>
+                setCity(e.target.value)
+              }
+              required
             />
 
             <input
               type="text"
               placeholder="State"
+              value={state}
+              onChange={(e) =>
+                setState(e.target.value)
+              }
+              required
             />
-
           </div>
 
           <input
             type="text"
             placeholder="Country"
+            value={country}
+            onChange={(e) =>
+              setCountry(e.target.value)
+            }
+            required
           />
 
           <label className="checkbox">
-
-            <input type="checkbox" />
-
-            I agree to the Terms & Conditions
-
+            <input
+              type="checkbox"
+              required
+            />
+            I agree to the Terms &
+            Conditions
           </label>
 
           <label className="checkbox">
-
             <input type="checkbox" />
-
-            Send me exclusive offers and updates
-
+            Send me exclusive offers
+            and updates
           </label>
 
-          <button>
-
-            Create Account
-
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Creating Account..."
+              : "Create Account"}
           </button>
-
         </form>
-
       </div>
-
     </section>
   );
 };

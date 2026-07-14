@@ -108,10 +108,7 @@ const Hero = () => {
 
       <div className="hero-right">
 
-  <img
-    src={heroImage}
-    alt="Loditojo Gadgets"
-  />
+ <img src="/src/assets/icons/hero-gadget.png" alt="Hero Gadget" />
 
   <div className="floating-card card1">
     📦 Fast Delivery

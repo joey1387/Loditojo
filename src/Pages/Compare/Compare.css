@@ -1,0 +1,57 @@
+.compare-page{
+    padding:90px 8%;
+}
+
+.compare-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:40px;
+}
+
+.compare-header button{
+    background:#DC2626;
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.compare-table{
+    border:1px solid #eee;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.compare-row{
+    display:grid;
+    grid-template-columns:220px repeat(auto-fit,250px);
+    border-bottom:1px solid #eee;
+}
+
+.compare-row>div{
+    padding:20px;
+    text-align:center;
+}
+
+.compare-title{
+    background:#f8f8f8;
+    font-weight:700;
+}
+
+.compare-product img{
+    width:120px;
+    height:120px;
+    object-fit:contain;
+}
+
+.compare-product button{
+    margin-top:15px;
+    border:none;
+    background:#6C2BD9;
+    color:white;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+}

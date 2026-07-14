@@ -7,73 +7,89 @@ import {
 } from "react";
 
 type User = {
-  fullName: string;
+  id: string;
+  name: string;
   email: string;
+  role: string;
 };
 
 type AuthContextType = {
   user: User | null;
+  token: string | null;
   isLoggedIn: boolean;
-  login: (user: User) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext =
+  createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-
   const [user, setUser] = useState<User | null>(null);
 
+  const [token, setToken] = useState<string | null>(
+    null
+  );
+
   useEffect(() => {
+    const savedUser =
+      localStorage.getItem("user");
 
-    const savedUser = localStorage.getItem("user");
-    const loggedIn = localStorage.getItem("loggedIn");
+    const savedToken =
+      localStorage.getItem("token");
 
-    if (savedUser && loggedIn === "true") {
+    if (savedUser && savedToken) {
       setUser(JSON.parse(savedUser));
+      setToken(savedToken);
     }
-
   }, []);
 
-  const login = (user: User) => {
+  const login = (
+    user: User,
+    token: string
+  ) => {
+    localStorage.setItem(
+      "user",
+      JSON.stringify(user)
+    );
 
-    localStorage.setItem("loggedIn", "true");
+    localStorage.setItem("token", token);
 
     setUser(user);
 
+    setToken(token);
   };
 
   const logout = () => {
+    localStorage.removeItem("user");
 
-    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("token");
 
     setUser(null);
 
+    setToken(null);
   };
 
   return (
-
     <AuthContext.Provider
       value={{
         user,
-        isLoggedIn: !!user,
+        token,
+        isLoggedIn: !!token,
         login,
         logout,
       }}
     >
       {children}
     </AuthContext.Provider>
-
   );
-
 };
 
 export const useAuth = () => {
-
   const context = useContext(AuthContext);
 
   if (!context) {
@@ -83,5 +99,4 @@ export const useAuth = () => {
   }
 
   return context;
-
 };

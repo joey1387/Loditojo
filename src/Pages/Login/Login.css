@@ -1,63 +1,23 @@
-.auth-page{
+.forgot-password{
 display:flex;
-justify-content:center;
-align-items:center;
-min-height:90vh;
-background:#f8fafc;
+justify-content:flex-end;
+margin-top:-8px;
 }
 
-.auth-card{
-width:420px;
-background:white;
-padding:40px;
-border-radius:20px;
-box-shadow:0 15px 40px rgba(0,0,0,.08);
-
-display:flex;
-flex-direction:column;
-gap:18px;
-}
-
-.auth-card h1{
-text-align:center;
+.forgot-password a{
+text-decoration:none;
 color:#6C2BD9;
+font-weight:600;
 }
 
-.auth-card p{
+.switch-auth{
 text-align:center;
-color:#666;
+margin-top:10px;
 }
 
-.auth-card input{
-padding:15px;
-border:2px solid #ddd;
-border-radius:10px;
-font-size:16px;
-}
-
-.auth-card input:focus{
-border-color:#6C2BD9;
-outline:none;
-}
-
-.auth-card button{
-padding:16px;
-background:#16A34A;
-color:white;
-border:none;
-border-radius:10px;
-cursor:pointer;
-font-size:17px;
-transition:.3s;
-}
-
-.auth-card button:hover{
-background:#6C2BD9;
-}
-
-.auth-card a{
+.switch-auth a{
 margin-left:6px;
-color:#16A34A;
-font-weight:bold;
+color:#6C2BD9;
+font-weight:700;
 text-decoration:none;
 }

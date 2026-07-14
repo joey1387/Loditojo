@@ -1,41 +1,149 @@
-/* 
-import { products } from "../../data/products";
-import { useNavigate } from "react-router-dom";
+.category-section{
 
-const CategorySection = () => {
-  const navigate = useNavigate();
+padding:100px 8%;
 
-  const categories = [...new Set(products.map((p) => p.category))];
+background:#FAFAFC;
 
-  return (
-    <section className="category-section">
+}
 
-      <div className="category-header">
-        <p>SHOP BY CATEGORY</p>
-        <h2>Browse Categories</h2>
-      </div>
+.category-header{
 
-      <div className="category-grid">
+text-align:center;
 
-        {categories.map((category) => (
+margin-bottom:60px;
 
-          <div
-            key={category}
-            className="category-card"
-            onClick={() =>
-              navigate(`/shop?category=${encodeURIComponent(category)}`)
-            }
-          >
-            <h3>{category}</h3>
-            <span>View Products →</span>
-          </div>
+}
 
-        ))}
+.category-header p{
 
-      </div>
+color:#6C2BD9;
 
-    </section>
-  );
-};
+font-weight:700;
 
-export default CategorySection; */
+letter-spacing:2px;
+
+margin-bottom:12px;
+
+}
+
+.category-header h2{
+
+font-size:3rem;
+
+color:#111827;
+
+}
+
+.category-grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:30px;
+
+}
+
+.category-card{
+
+background:white;
+
+border-radius:22px;
+
+padding:35px;
+
+cursor:pointer;
+
+transition:.35s;
+
+box-shadow:0 15px 35px rgba(0,0,0,.06);
+
+text-align:center;
+
+}
+
+.category-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 25px 45px rgba(108,43,217,.18);
+
+}
+
+.category-icon{
+
+width:80px;
+
+height:80px;
+
+margin:auto;
+
+border-radius:50%;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:34px;
+
+color:white;
+
+margin-bottom:25px;
+
+}
+
+.category-card h3{
+
+font-size:24px;
+
+margin-bottom:10px;
+
+color:#111827;
+
+text-transform:capitalize;
+
+}
+
+.category-card p{
+
+color:#6B7280;
+
+font-weight:600;
+
+}
+
+@media(max-width:768px){
+
+.category-header h2{
+
+font-size:2.2rem;
+
+}
+
+.category-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+.category-card{
+
+padding:25px;
+
+}
+
+.category-icon{
+
+width:65px;
+
+height:65px;
+
+font-size:28px;
+
+}
+
+}

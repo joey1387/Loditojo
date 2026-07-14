@@ -1,18 +1,44 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "../App";
 import { BrowserRouter } from "react-router-dom";
-import { CartProvider } from "./context/CartContext";
-import { AuthProvider } from "./context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+import App from "../App";
+
+import { AuthProvider } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import { CompareProvider } from "./context/CompareContext";
+import { ThemeProvider } from "./context/ThemeContext";
+
+ReactDOM.createRoot(
+  document.getElementById("root")!
+).render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <CompareProvider>
+                <App />
+
+                <ToastContainer
+                  position="top-right"
+                  autoClose={2500}
+                  hideProgressBar={false}
+                  newestOnTop
+                  closeOnClick
+                  pauseOnHover
+                  draggable
+                  theme="colored"
+                />
+              </CompareProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

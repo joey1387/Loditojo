@@ -1,76 +1,116 @@
 import "./Footer.css";
-import logo from "../../assets/icons/logo.png";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.svg";
+
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
-  FaXTwitter,
-} from "react-icons/fa6";
+  FaTwitter,
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcPaypal,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
 
 const Footer = () => {
   return (
     <footer className="footer">
-
-      <div className="footer-top">
-
+      <div className="footer-grid">
         <div className="footer-brand">
-
-          <img src={logo} alt="Loditojo" />
-
-          <h2>Loditojo Gadgets</h2>
+          <img
+            src={logo}
+            alt="Loditojo Gadgets"
+          />
 
           <p>
-            Premium Gadgets. Trusted Technology.
+            Premium gadgets for modern lifestyles.
+            We provide authentic smartphones,
+            laptops, gaming devices and accessories
+            with fast nationwide delivery.
           </p>
 
+          <div className="social-icons">
+            <a href="#">
+              <FaFacebookF />
+            </a>
+
+            <a href="#">
+              <FaInstagram />
+            </a>
+
+            <a href="#">
+              <FaTwitter />
+            </a>
+
+            <a href="#">
+              <FaLinkedinIn />
+            </a>
+          </div>
         </div>
 
-        <div className="footer-links">
-
+        <div>
           <h3>Quick Links</h3>
 
-          <a href="/">Home</a>
-          <a href="/shop">Shop</a>
-          <a href="/cart">Cart</a>
-
+          <Link to="/">Home</Link>
+          <Link to="/shop">Shop</Link>
+          <Link to="/about">About</Link>
+          <Link to="/contact">Contact</Link>
         </div>
 
-        <div className="footer-links">
+        <div>
+          <h3>Categories</h3>
 
-          <h3>Support</h3>
+          <Link to="/shop?category=phones">
+            Phones
+          </Link>
 
-          <a href="#">Contact</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms</a>
+          <Link to="/shop?category=laptops">
+            Laptops
+          </Link>
 
+          <Link to="/shop?category=accessories">
+            Accessories
+          </Link>
+
+          <Link to="/shop">
+            All Products
+          </Link>
         </div>
 
-        <div className="footer-social">
+        <div>
+          <h3>Contact Us</h3>
 
-          <h3>Follow Us</h3>
+          <p>
+            <FaPhoneAlt />
+            +234 800 000 0000
+          </p>
 
-          <div className="social-icons">
+          <p>
+            <FaEnvelope />
+            support@loditojo.com
+          </p>
 
-            <FaFacebookF />
-
-            <FaInstagram />
-
-            <FaXTwitter />
-
-            <FaLinkedinIn />
-
-          </div>
-
+          <p>
+            <FaMapMarkerAlt />
+            Enugu, Enugu State, Nigeria
+          </p>
         </div>
-
       </div>
 
-      <hr />
+      <div className="footer-bottom">
+        <div className="payment-icons">
+          <FaCcVisa />
+          <FaCcMastercard />
+          <FaCcPaypal />
+        </div>
 
-      <p className="copyright">
-        © 2026 Loditojo Gadgets. All Rights Reserved.
-      </p>
-
+        <p>
+          © 2026 Loditojo Gadgets. All Rights Reserved.
+        </p>
+      </div>
     </footer>
   );
 };

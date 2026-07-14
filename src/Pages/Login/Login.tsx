@@ -1,56 +1,114 @@
 import "./Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { loginUser } from "../../api/authApi";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const response = await loginUser(
+        email,
+        password
+      );
+      
+      console.log(response);
+
+      login(
+        response.user,
+        response.accessToken
+      );
+
+      toast.success(response.message);
+
+      navigate("/");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Login failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="auth-page">
-
       <div className="auth-card">
-
         <h1>Welcome Back</h1>
 
-        <p>
-          Login to continue shopping.
-        </p>
+        <p>Login to continue shopping.</p>
 
-        <form className="auth-form" autoComplete="off">
-
+        <form
+          className="auth-form"
+          autoComplete="off"
+          onSubmit={handleSubmit}
+        >
           <input
             type="email"
             placeholder="Email Address"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            required
           />
 
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) =>
+              setPassword(
+                e.target.value
+              )
+            }
+            required
           />
 
           <div className="forgot-password">
-
             <Link to="/forgot-password">
               Forgot Password?
             </Link>
-
           </div>
 
-          <button>
-            Login
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Logging in..."
+              : "Login"}
           </button>
 
           <p className="switch-auth">
-
             Don't have an account?
-
             <Link to="/register">
+              {" "}
               Register
             </Link>
-
           </p>
-
         </form>
-
       </div>
-
     </section>
   );
 };

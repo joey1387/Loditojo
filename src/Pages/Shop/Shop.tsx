@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import "./Shop.css";
+
 import ProductCard from "../../Components/ProductCard/ProductCard";
 import SearchBar from "../../Components/SearchBar/SearchBar";
 import { products } from "../../data/products";
 
 const Shop = () => {
-
-  const [searchParams] = useSearchParams();
-
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [sortBy, setSortBy] = useState("default");
 
-  useEffect(() => {
-  const searchQuery = searchParams.get("search");
-  const categoryQuery = searchParams.get("category");
-
-  if (searchQuery) {
-    setSearch(searchQuery);
-  }
-
-  if (categoryQuery) {
-    setCategory(categoryQuery);
-  }
-}, [searchParams]);
   const categories = [
     "All",
     ...new Set(products.map((product) => product.category)),
@@ -32,24 +17,18 @@ const Shop = () => {
 
   const filteredProducts = products
     .filter((product) => {
-
-      const matchesSearch =
-        product.name
-          .toLowerCase()
-          .includes(search.toLowerCase());
+      const matchesSearch = product.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
       const matchesCategory =
         category === "All" ||
         product.category === category;
 
       return matchesSearch && matchesCategory;
-
     })
-
     .sort((a, b) => {
-
       switch (sortBy) {
-
         case "low":
           return a.price - b.price;
 
@@ -61,30 +40,24 @@ const Shop = () => {
 
         default:
           return 0;
-
       }
-
     });
 
   return (
-
     <div className="shop-page">
-
       <h1 className="shop-title">
         All Products
       </h1>
 
       <div className="shop-controls">
-
         <SearchBar
           search={search}
           setSearch={setSearch}
+          products={products}
         />
 
         <div className="categories">
-
           {categories.map((item) => (
-
             <button
               key={item}
               className={
@@ -96,9 +69,7 @@ const Shop = () => {
             >
               {item}
             </button>
-
           ))}
-
         </div>
 
         <select
@@ -108,7 +79,6 @@ const Shop = () => {
             setSortBy(e.target.value)
           }
         >
-
           <option value="default">
             Sort Products
           </option>
@@ -124,9 +94,7 @@ const Shop = () => {
           <option value="rating">
             Highest Rated
           </option>
-
         </select>
-
       </div>
 
       <p className="product-count">
@@ -135,29 +103,36 @@ const Shop = () => {
       </p>
 
       <div className="products-grid">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              {...product}
+            />
+          ))
+        ) : (
+          <div className="empty-search">
+            <h2>No Products Found</h2>
 
-        {filteredProducts.map((product) => (
+            <p>
+              We couldn't find any product
+              matching{" "}
+              <strong>"{search}"</strong>
+            </p>
 
-          <ProductCard
-            key={product.id}
-            id={product.id}
-            name={product.name}
-            category={product.category}
-            price={product.price}
-            rating={product.rating}
-            stock={product.stock}
-            featured={product.featured}
-            image={product.image}
-          />
-
-        ))}
-
+            <button
+              onClick={() => {
+                setSearch("");
+                setCategory("All");
+              }}
+            >
+              Clear Search
+            </button>
+          </div>
+        )}
       </div>
-
     </div>
-
   );
-
 };
 
 export default Shop;

@@ -1,61 +1,59 @@
 import "./ProductSection.css";
-import { products } from "../../data/products";
-import ProductCard from "../ProductCard/ProductCard";
 import { useNavigate } from "react-router-dom";
 
-const ProductSection = () => {
+import ProductCard from "../ProductCard/ProductCard";
+import { products } from "../../data/products";
 
+const ProductSection = () => {
   const navigate = useNavigate();
 
+  const featuredProducts = products.filter(
+    (product) => product.featured
+  );
+
   return (
-
     <section className="product-section">
+      <div className="section-top">
+        <span className="section-tag">
+          FEATURED COLLECTION
+        </span>
 
-      <div className="section-header">
+        <h2>Trending Gadgets</h2>
 
-        <div>
+        <p>
+          Handpicked premium gadgets with unbeatable prices,
+          top performance and nationwide delivery.
+        </p>
+      </div>
 
-          <h2>Featured Products</h2>
+      <div className="products-grid">
+        {featuredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            category={product.category}
+            price={product.price}
+            rating={product.rating}
+            stock={product.stock}
+            featured={product.featured}
+            image={product.image}
+            description={product.description}
+            specifications={product.specifications}
+            reviews={product.reviews}
+          />
+        ))}
+      </div>
 
-          <p>
-            Explore our most popular premium gadgets.
-          </p>
-
-        </div>
-
+      <div className="view-all-container">
         <button
           className="view-all-btn"
           onClick={() => navigate("/shop")}
         >
-          View All
+          View All Products →
         </button>
-
       </div>
-
-      <div className="products-grid">
-
-        {products
-          .filter((product) => product.featured)
-          .map((product) => (
-
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              category={product.category}
-              price={product.price}
-              rating={product.rating}
-              stock={product.stock}
-              featured={product.featured}
-              image={product.image}
-            />
-
-          ))}
-
-      </div>
-
     </section>
-
   );
 };
 

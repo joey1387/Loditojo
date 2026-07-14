@@ -1,82 +1,211 @@
 import "./Navbar.css";
-import { AiOutlineShoppingCart } from "react-icons/ai";
+import logo from "../../assets/logo.svg";
+import {
+  AiOutlineShoppingCart,
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineHeart,
+} from "react-icons/ai";
+
+import { FaBalanceScale } from "react-icons/fa";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "../../assets/icons/logo.png";
+import { useState } from "react";
+import { BsMoonStarsFill, BsSunFill } from "react-icons/bs";
+import { useTheme } from "../../context/ThemeContext";
+import { useWishlist } from "../../context/WishlistContext";
+import { useCompare } from "../../context/CompareContext";
+// import SearchBar from "../SearchBar/SearchBar";
+import MiniCart from "../MiniCart/MiniCart";
 
 const Navbar = () => {
   const { cart } = useCart();
-  const { isLoggedIn, user , logout} = useAuth();
+  const { wishlist } = useWishlist();
+  const { compare } = useCompare();
+  const { isLoggedIn, user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const { theme, toggleTheme } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const totalItems = cart.reduce(
     (sum, item) => sum + item.quantity,
     0
   );
 
-  
- return (
-  <nav className="navbar">
+  const closeMenu = () => setMenuOpen(false);
+// const [search, setSearch] = useState("");
+const [cartOpen, setCartOpen] = useState(false);
+  return (
+    <nav className="navbar">
 
-    <Link to="/" className="logo">
-      <img
-        src={logo}
-        alt="Loditojo Gadgets"
-      />
-    </Link>
-
-    <div className="nav-links">
-
-  <NavLink to="/">Home</NavLink>
-
-  <NavLink to="/shop">Shop</NavLink>
-
-  <NavLink to="/categories">Categories</NavLink>
-  <NavLink to="/about">About</NavLink>
-  <NavLink to="/contact">Contact</NavLink>
-
-</div>
-
-<div className="nav-actions">
-
-  {isLoggedIn ? (
-    <>
-      <span className="welcome">
-        Hi, {user?.fullName}
-      </span>
-
-      <button
-        className="logout-btn"
-        onClick={() => {
-          logout();
-          navigate("/");
-        }}
+      <Link
+        to="/"
+        className="logo"
+        onClick={closeMenu}
       >
-        Logout
-      </button>
-    </>
+        <img
+          src={logo}
+          alt="Loditojo Gadgets"
+        />
+      </Link>
+
+      <div className="menu-icon">
+
+        {menuOpen ? (
+
+          <AiOutlineClose
+            size={30}
+            onClick={() => setMenuOpen(false)}
+          />
+
+        ) : (
+
+          <AiOutlineMenu
+            size={30}
+            onClick={() => setMenuOpen(true)}
+          />
+
+        )}
+
+      </div>
+
+      <div
+        className={
+          menuOpen
+            ? "nav-links active-menu"
+            : "nav-links"
+        }
+      >
+
+        <NavLink
+          to="/"
+          onClick={closeMenu}
+        >
+          Home
+        </NavLink>
+
+        <NavLink
+          to="/shop"
+          onClick={closeMenu}
+        >
+          Shop
+        </NavLink>
+
+        <NavLink
+          to="/about"
+          onClick={closeMenu}
+        >
+          About
+        </NavLink>
+
+        <NavLink
+          to="/contact"
+          onClick={closeMenu}
+        >
+          Contact
+        </NavLink>
+
+        {!isLoggedIn ? (
+          <>
+            <NavLink
+              to="/login"
+              onClick={closeMenu}
+            >
+              Login
+            </NavLink>
+
+            <NavLink
+              to="/register"
+              onClick={closeMenu}
+            >
+              Register
+            </NavLink>
+          </>
+        ) : (
+          <>
+            <span className="welcome">
+              Hi, {user?.name}
+            </span>
+
+            <button
+              className="logout-btn"
+              onClick={() => {
+                logout();
+                closeMenu();
+                navigate("/");
+              }}
+            >
+              Logout
+            </button>
+          </>
+        )}
+
+      </div>
+  {/* <div className="navbar-search">
+   <SearchBar
+    search={search}
+    setSearch={setSearch}
+  />
+</div> */}
+      <div className="nav-actions">
+<button
+  className="theme-btn"
+  onClick={toggleTheme}
+>
+  {theme === "light" ? (
+    <BsMoonStarsFill />
   ) : (
-    <>
-     <NavLink to="/login">Login </NavLink>
-
-      <NavLink to="/register">Register</NavLink>
-    </>
+    <BsSunFill />
   )}
+</button>
+  <Link
+    to="/wishlist"
+    className="cart-link"
+  >
+    <AiOutlineHeart size={24} />
 
-  <Link to="/cart" className="cart-link">
-    <AiOutlineShoppingCart size={24} />
-
-    {totalItems > 0 && (
+    {wishlist.length > 0 && (
       <span className="cart-count">
-        {totalItems}
+        {wishlist.length}
       </span>
     )}
   </Link>
 
-</div>
+  <Link
+    to="/compare"
+    className="cart-link"
+  >
+    <FaBalanceScale size={20} />
 
-  </nav>
-);
-}
+    {compare.length > 0 && (
+      <span className="cart-count">
+        {compare.length}
+      </span>
+    )}
+  </Link>
+
+  <button
+  className="cart-link cart-btn"
+  onClick={() => setCartOpen(true)}
+>
+  <AiOutlineShoppingCart size={25} />
+
+  {totalItems > 0 && (
+    <span className="cart-count">
+      {totalItems}
+    </span>
+  )}
+</button>
+
+</div>
+<MiniCart
+open={cartOpen}
+onClose={() => setCartOpen(false)}
+/>
+    </nav>
+  );
+};
+
 export default Navbar;
