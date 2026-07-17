@@ -15,9 +15,9 @@ type CartContextType = {
   cart: CartItem[];
   cartTotal: number;
   addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  removeFromCart: (id: string) => void;
+  increaseQuantity: (id: string) => void;
+  decreaseQuantity: (id: string) => void;
   clearCart: () => void;
 };
 
@@ -69,13 +69,13 @@ export const CartProvider = ({
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart((prev) =>
       prev.filter((item) => item.id !== id)
     );
   };
 
-  const increaseQuantity = (id: number) => {
+  const increaseQuantity = (id: string) => {
     setCart((prev) =>
       prev.map((item) =>
         item.id === id
@@ -88,7 +88,7 @@ export const CartProvider = ({
     );
   };
 
-  const decreaseQuantity = (id: number) => {
+  const decreaseQuantity = (id: string) => {
     setCart((prev) =>
       prev
         .map((item) =>

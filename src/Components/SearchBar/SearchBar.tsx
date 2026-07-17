@@ -2,19 +2,22 @@ import "./SearchBar.css";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Product } from "../../types/Product";
 
-interface Product {
-  _id: string;
-  name: string;
-  category: any;
-  basePrice?: number;
-  price?: number;
-  images?: string[];
-}
+// interface Product {
+//   id: string;
+//   name: string;
+//   category: string;
+//   price: number;
+//   image: string;
+//   images?: string[];
+// }
 
 type Props = {
   search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  setSearch: React.Dispatch<
+    React.SetStateAction<string>
+  >;
   products?: Product[];
 };
 
@@ -25,7 +28,8 @@ const SearchBar = ({
 }: Props) => {
   const navigate = useNavigate();
 
-  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showSuggestions, setShowSuggestions] =
+    useState(false);
 
   const suggestions = products
     .filter((product) =>
@@ -47,6 +51,12 @@ const SearchBar = ({
           setSearch(e.target.value);
           setShowSuggestions(true);
         }}
+        onBlur={() =>
+          setTimeout(() => setShowSuggestions(false), 150)
+        }
+        onFocus={() => {
+          if (search) setShowSuggestions(true);
+        }}
       />
 
       {search && (
@@ -62,22 +72,21 @@ const SearchBar = ({
       )}
 
       {search &&
-        showSuggestions &&
-        products.length > 0 && (
+        showSuggestions && (
           <div className="search-suggestions">
             {suggestions.length > 0 ? (
               suggestions.map((product) => (
                 <div
-                  key={product._id}
+                  key={product.id}
                   className="suggestion-item"
                   onClick={() => {
-                    navigate(`/product/${product._id}`);
+                    navigate(`/product/${product.id}`);
                     setSearch("");
                     setShowSuggestions(false);
                   }}
                 >
                   <img
-                    src={product.images?.[0]}
+                    src={product.image}
                     alt={product.name}
                   />
 
@@ -85,12 +94,7 @@ const SearchBar = ({
                     <h4>{product.name}</h4>
 
                     <small>
-                      ₦
-                      {(
-                        product.basePrice ??
-                        product.price ??
-                        0
-                      ).toLocaleString()}
+                      ₦{product.price.toLocaleString()}
                     </small>
                   </div>
                 </div>

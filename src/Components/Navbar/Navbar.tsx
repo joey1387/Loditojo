@@ -16,7 +16,6 @@ import { BsMoonStarsFill, BsSunFill } from "react-icons/bs";
 import { useTheme } from "../../context/ThemeContext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCompare } from "../../context/CompareContext";
-// import SearchBar from "../SearchBar/SearchBar";
 import MiniCart from "../MiniCart/MiniCart";
 
 const Navbar = () => {
@@ -28,15 +27,14 @@ const Navbar = () => {
 
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
-
+const [cartOpen, setCartOpen] = useState(false);
   const totalItems = cart.reduce(
     (sum, item) => sum + item.quantity,
     0
   );
 
   const closeMenu = () => setMenuOpen(false);
-// const [search, setSearch] = useState("");
-const [cartOpen, setCartOpen] = useState(false);
+
   return (
     <nav className="navbar">
 
@@ -143,12 +141,7 @@ const [cartOpen, setCartOpen] = useState(false);
         )}
 
       </div>
-  {/* <div className="navbar-search">
-   <SearchBar
-    search={search}
-    setSearch={setSearch}
-  />
-</div> */}
+  
       <div className="nav-actions">
 <button
   className="theme-btn"

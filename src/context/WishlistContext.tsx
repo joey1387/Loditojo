@@ -9,8 +9,8 @@ import { Product } from "../types/Product";
 type WishlistContextType = {
   wishlist: Product[];
   addToWishlist: (product: Product) => void;
-  removeFromWishlist: (_id: string) => void;
-  isInWishlist: (_id: string) => boolean;
+  removeFromWishlist: (id: string) => void;
+  isInWishlist: (id: string) => boolean;
 };
 
 const WishlistContext =
@@ -36,11 +36,7 @@ export const WishlistProvider = ({
 
   const addToWishlist = (product: Product) => {
     setWishlist((prev) => {
-      if (
-        prev.find(
-          (item) => item._id === product._id
-        )
-      ) {
+      if (prev.find((item) => item.id === product.id)) {
         return prev;
       }
 
@@ -48,17 +44,15 @@ export const WishlistProvider = ({
     });
   };
 
-  const removeFromWishlist = (_id: string) => {
+  const removeFromWishlist = (id: string) => {
     setWishlist((prev) =>
-      prev.filter(
-        (item) => item._id !== _id
-      )
+      prev.filter((item) => item.id !== id)
     );
   };
 
-  const isInWishlist = (_id: string) => {
+  const isInWishlist = (id: string) => {
     return wishlist.some(
-      (item) => item._id === _id
+      (item) => item.id === id
     );
   };
 
@@ -77,9 +71,7 @@ export const WishlistProvider = ({
 };
 
 export const useWishlist = () => {
-  const context = useContext(
-    WishlistContext
-  );
+  const context = useContext(WishlistContext);
 
   if (!context) {
     throw new Error(

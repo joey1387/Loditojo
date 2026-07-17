@@ -1,5 +1,5 @@
 export type Review = {
-  id: number;
+  id: string;
   name: string;
   rating: number;
   comment: string;
@@ -7,17 +7,11 @@ export type Review = {
 };
 
 export type Specifications = {
-  brand: string;
-  model: string;
-  color: string;
-  storage: string;
-  display: string;
-  battery: string;
-  warranty: string;
+  [key: string]: string;
 };
 
 export type Product = {
-  id: number;
+  id: string;
 
   name: string;
 
@@ -33,11 +27,13 @@ export type Product = {
 
   image: string;
 
-  images: string[];
+  images?: string[];
 
   description: string;
 
-  specifications: Specifications;
+  specifications?: Specifications;
 
   reviews: Review[];
+
+  brand?: string;
 };

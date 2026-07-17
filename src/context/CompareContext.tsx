@@ -10,9 +10,9 @@ import { Product } from "../types/Product";
 type CompareContextType = {
   compare: Product[];
   addToCompare: (product: Product) => void;
-  removeFromCompare: (id: number) => void;
+  removeFromCompare: (id: string) => void;
   clearCompare: () => void;
-  isInCompare: (id: number) => boolean;
+  isInCompare: (id: string) => boolean;
 };
 
 const CompareContext =
@@ -54,7 +54,7 @@ export const CompareProvider = ({
     });
   };
 
-  const removeFromCompare = (id: number) => {
+  const removeFromCompare = (id: string) => {
     setCompare((prev) =>
       prev.filter(
         (item) => item.id !== id
@@ -66,7 +66,7 @@ export const CompareProvider = ({
     setCompare([]);
   };
 
-  const isInCompare = (id: number) => {
+  const isInCompare = (id: string) => {
     return compare.some(
       (item) => item.id === id
     );

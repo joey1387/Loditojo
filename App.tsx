@@ -21,6 +21,9 @@ import ResetPassword from "./src/Pages/ResetPassword/ResetPassword";
 import Wishlist from "./src/Pages/Wishlist/Wishlist";
 import Compare from "./src/Pages/Compare/Compare";
 import AIChat from "./src/Components/AIChat/AIChat";
+import OrderTracking from "./src/Pages/OrderTracking/OrderTracking";
+import OrderHistory from "./src/Pages/OrderHistory/OrderHistory";
+import PaymentVerify from "./src/Pages/PaymentVerify/PaymentVerify";
 
 function App() {
   return (
@@ -42,6 +45,23 @@ function App() {
   path="/compare"
   element={<Compare />}
 />
+<Route
+  path="/track-order"
+  element={<OrderTracking />}
+/>
+<Route
+  path="/payment/verify"
+  element={<PaymentVerify />}
+/>
+
+<Route
+  path="/orders"
+  element={
+    <ProtectedRoute>
+      <OrderHistory />
+    </ProtectedRoute>
+  }
+/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -60,7 +80,7 @@ function App() {
       </Routes>
 
       <AIChat />
-      
+
       <Footer />
     </>
   );

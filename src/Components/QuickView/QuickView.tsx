@@ -2,9 +2,10 @@ import "./QuickView.css";
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { Product } from "../../types/Product";
 
 type Props = {
-  product: any;
+  product: Product;
   onClose: () => void;
 };
 

@@ -1,15 +1,59 @@
-import { products } from "../data/products";
+import api from "./api";
 
-export const getProducts = async () => {
-  return products;
+export const getAllProducts = async () => {
+  const response = await api.get("/products");
+  return response.data.data || response.data;
 };
 
-export const getSingleProduct = async (id: string) => {
-  return products.find((p) => p.id === id);
+export const getProductById = async (id: string) => {
+  const response = await api.get(`/products/${id}`);
+  return response.data.data || response.data;
 };
 
-export const searchProducts = async (query: string) => {
-  return products.filter((product) =>
-    product.name.toLowerCase().includes(query.toLowerCase())
+export const getRelatedProducts = async (id: string) => {
+  try {
+    const response = await api.get(
+      `/products/${id}/related`
+    );
+
+    return response.data.data || response.data;
+  } catch (error) {
+    console.error(error);
+
+    const allProducts =
+      await getAllProducts();
+
+    const current = allProducts.find(
+      (item: any) => item._id === id
+    );
+
+    if (!current) return [];
+
+    return allProducts.filter(
+      (item: any) =>
+        item.category?._id ===
+          current.category?._id &&
+        item._id !== current._id
+    );
+  }
+};
+
+export const searchProducts = async (
+  query: string
+) => {
+  const response = await api.get(
+    `/products/search?q=${encodeURIComponent(query)}`
   );
+
+  return response.data.data || response.data;
+};
+
+export const getProductsByCategory = async (
+  category: string
+) => {
+  const response = await api.get(
+    `/products/category/${category}`
+  );
+
+  return response.data.data || response.data;
 };

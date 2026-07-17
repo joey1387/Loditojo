@@ -1,5 +1,7 @@
+import { Review } from "../types/Product";
+
 export const getReviews = (
-  productId: number,
+  productId: string,
   defaultReviews: any[]
 ) => {
   const saved = localStorage.getItem(
@@ -12,7 +14,7 @@ export const getReviews = (
 };
 
 export const saveReviews = (
-  productId: number,
+  productId: string,
   reviews: any[]
 ) => {
   localStorage.setItem(

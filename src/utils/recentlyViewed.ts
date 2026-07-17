@@ -27,9 +27,7 @@ export const getRecentlyViewed = (
   return ids
     .map((id) =>
       products.find(
-        (product: any) =>
-          product._id === id ||
-          product.id === id
+        (product) => product.id === id
       )
     )
     .filter(Boolean) as Product[];

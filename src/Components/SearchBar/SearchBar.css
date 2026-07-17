@@ -63,3 +63,55 @@
 .clear-search:hover{
     color:#6C2BD9;
 }
+.search-suggestions{
+    position:absolute;
+    top:60px;
+    left:0;
+    width:100%;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+    z-index:999;
+}
+
+.suggestion-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.suggestion-item:hover{
+    background:rgba(108,43,217,.08);
+}
+
+.suggestion-item img{
+    width:60px;
+    height:60px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:10px;
+    padding:5px;
+    flex-shrink:0;
+}
+
+.suggestion-item h4{
+    margin:0;
+    font-size:15px;
+    color:var(--text);
+}
+
+.suggestion-item small{
+    color:var(--primary);
+    font-weight:700;
+}
+
+.no-suggestion{
+    padding:15px;
+    text-align:center;
+    color:var(--text2);
+}

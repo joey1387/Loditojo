@@ -1,6 +1,7 @@
 import "./MiniCart.css";
 import { useCart } from "../../context/CartContext";
-import { FaTimes } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
+import { FaTimes, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -9,7 +10,12 @@ type Props = {
 };
 
 const MiniCart = ({ open, onClose }: Props) => {
-  const { cart } = useCart();
+  const {
+    cart,
+    removeFromCart,
+  } = useCart();
+
+  const { isLoggedIn } = useAuth();
 
   const navigate = useNavigate();
 
@@ -18,11 +24,14 @@ const MiniCart = ({ open, onClose }: Props) => {
     0
   );
 
+  const totalItems = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
+
   return (
     <div
-      className={`mini-cart-overlay ${
-        open ? "show" : ""
-      }`}
+      className={`mini-cart-overlay ${open ? "show" : ""}`}
       onClick={onClose}
     >
       <div
@@ -30,46 +39,73 @@ const MiniCart = ({ open, onClose }: Props) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mini-cart-header">
-          <h2>Your Cart</h2>
+          <h2>Your Cart ({totalItems})</h2>
 
           <FaTimes
-            onClick={onClose}
             className="close-cart"
+            onClick={onClose}
           />
         </div>
 
         {cart.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <div className="mini-cart-empty">
+            <p>Your cart is empty.</p>
+
+            <button
+              onClick={() => {
+                navigate("/shop");
+                onClose();
+              }}
+            >
+              Start Shopping
+            </button>
+          </div>
         ) : (
           <>
-            {cart.map((item) => (
-              <div
-                className="mini-cart-item"
-             key={item.id}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                />
+            <div className="mini-cart-body">
+              {cart.map((item) => (
+                <div
+                  key={item.id}
+                  className="mini-cart-item"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "/placeholder.png";
+                    }}
+                  />
 
-                <div>
-                  <h4>{item.name}</h4>
+                  <div className="mini-cart-details">
+                    <h4>{item.name}</h4>
 
-                  <p>
-                    ₦
-                    {item.price.toLocaleString()}
-                  </p>
+                    <p>
+                      ₦
+                      {item.price.toLocaleString()}
+                    </p>
 
-                  <small>
-                    Qty: {item.quantity}
-                  </small>
+                    <small>
+                      Qty: {item.quantity}
+                    </small>
+                  </div>
+
+                  <button
+                    className="remove-mini-item"
+                    onClick={() =>
+                      removeFromCart(item.id)
+                    }
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
             <div className="mini-cart-footer">
               <h3>
-                ₦{total.toLocaleString()}
+                Total: ₦
+                {total.toLocaleString()}
               </h3>
 
               <button
@@ -83,7 +119,12 @@ const MiniCart = ({ open, onClose }: Props) => {
 
               <button
                 onClick={() => {
-                  navigate("/checkout");
+                  if (!isLoggedIn) {
+                    navigate("/login");
+                  } else {
+                    navigate("/checkout");
+                  }
+
                   onClose();
                 }}
               >
