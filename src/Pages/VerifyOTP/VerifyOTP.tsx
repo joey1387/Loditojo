@@ -1,22 +1,98 @@
 import "./VerifyOTP.css";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useState } from "react";
 
 const VerifyOTP = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const email = location.state?.email;
 
   const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
 
-    // Backend will verify OTP here later
-    navigate("/login");
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            otp,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "OTP verification failed"
+        );
+      }
+
+      alert(data.message);
+
+      navigate("/reset-password", {
+        state: {
+          email,
+          otp,
+        },
+      });
+
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to resend OTP"
+        );
+      }
+
+      alert(data.message);
+
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
 
   return (
     <section className="auth-page">
-
       <div className="auth-card">
 
         <h1>Verify Email</h1>
@@ -35,23 +111,40 @@ const VerifyOTP = () => {
             placeholder="Enter OTP"
             maxLength={6}
             value={otp}
-            onChange={(e) => setOtp(e.target.value)}
+            onChange={(e) =>
+              setOtp(e.target.value)
+            }
             required
           />
 
-          <button type="submit">
-            Verify OTP
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Verifying..."
+              : "Verify OTP"}
           </button>
 
           <p className="switch-auth">
             Didn't receive the code?
-            <Link to="#"> Resend OTP</Link>
+
+            <Link
+              to="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handleResendOTP();
+              }}
+            >
+              {" "}
+              Resend OTP
+            </Link>
+
           </p>
 
         </form>
 
       </div>
-
     </section>
   );
 };

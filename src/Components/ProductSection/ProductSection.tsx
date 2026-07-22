@@ -1,28 +1,24 @@
 import "./ProductSection.css";
 import { useNavigate } from "react-router-dom";
-
 import ProductCard from "../ProductCard/ProductCard";
 import { products } from "../../data/products";
 
 const ProductSection = () => {
   const navigate = useNavigate();
 
-  const featuredProducts = products.filter(
-    (product) => product.featured
-  );
+  // Show only 8 featured products on the homepage
+  const featuredProducts = products
+    .filter((product) => product.featured)
+    .slice(0, 8);
 
   return (
     <section className="product-section">
       <div className="section-top">
-        <span className="section-tag">
-          FEATURED COLLECTION
-        </span>
-
+        <span className="section-tag">FEATURED COLLECTION</span>
         <h2>Trending Gadgets</h2>
-
         <p>
-          Handpicked premium gadgets with unbeatable prices,
-          top performance and nationwide delivery.
+          Handpicked premium gadgets with unbeatable prices, top performance,
+          and nationwide delivery.
         </p>
       </div>
 

@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import { verifyPayment } from "../../api/orderApi";
 import { useCart } from "../../context/CartContext";
 
@@ -19,7 +18,9 @@ const PaymentVerify = () => {
           searchParams.get("reference");
 
         if (!reference) {
-          toast.error("Payment reference missing.");
+          toast.error(
+            "Payment reference missing."
+          );
 
           navigate("/checkout");
 
@@ -29,7 +30,12 @@ const PaymentVerify = () => {
         const response =
           await verifyPayment(reference);
 
-        if (response.success) {
+        const success =
+          response.success ||
+          response.status ===
+            "success";
+
+        if (success) {
           clearCart();
 
           toast.success(
@@ -49,7 +55,8 @@ const PaymentVerify = () => {
         console.error(error);
 
         toast.error(
-          error?.response?.data?.message ||
+          error?.response?.data
+            ?.message ||
             "Unable to verify payment."
         );
 
@@ -58,7 +65,11 @@ const PaymentVerify = () => {
     };
 
     verify();
-  }, [navigate, searchParams, clearCart]);
+  }, [
+    navigate,
+    searchParams,
+    clearCart,
+  ]);
 
   return (
     <div
@@ -72,7 +83,7 @@ const PaymentVerify = () => {
     >
       <h2>Verifying Payment...</h2>
 
-      <p>Please wait.</p>
+      <p>Please wait...</p>
     </div>
   );
 };

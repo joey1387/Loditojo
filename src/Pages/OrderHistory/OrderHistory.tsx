@@ -4,26 +4,7 @@ import { useNavigate } from "react-router-dom";
 const OrderHistory = () => {
   const navigate = useNavigate();
 
-  const orders = [
-    {
-      id: "LDT-240713-001",
-      date: "14 July 2026",
-      status: "Out for Delivery",
-      total: 2600000,
-    },
-    {
-      id: "LDT-240701-002",
-      date: "1 July 2026",
-      status: "Delivered",
-      total: 950000,
-    },
-    {
-      id: "LDT-240620-003",
-      date: "20 June 2026",
-      status: "Delivered",
-      total: 1850000,
-    },
-  ];
+  
 
   return (
     <section className="order-history-page">
@@ -69,7 +50,7 @@ const OrderHistory = () => {
 
             <button
               onClick={() =>
-                navigate("/track-order")
+              navigate(`/track-order/${order._id || order.id}`)
               }
             >
               Track Order

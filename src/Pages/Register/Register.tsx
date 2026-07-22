@@ -1,45 +1,33 @@
 import "./Register.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { registerUser } from "../../api/authApi";
+import {
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const [fullName, setFullName] =
-    useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
-  const [email, setEmail] =
-    useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [phone, setPhone] =
-    useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
 
-  const [password, setPassword] =
-    useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
-
-  const [street, setStreet] =
-    useState("");
-
-  const [city, setCity] =
-    useState("");
-
-  const [state, setState] =
-    useState("");
-
-  const [country, setCountry] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -63,16 +51,11 @@ const Register = () => {
         },
       });
 
-      toast.success(
-        response.message ||
-          "Registration successful"
-      );
-
+      toast.success(response.message || "Registration successful");
       navigate("/login");
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.message ||
-          "Registration failed"
+        error?.response?.data?.message || "Registration failed"
       );
     } finally {
       setLoading(false);
@@ -83,21 +66,14 @@ const Register = () => {
     <section className="auth-page">
       <div className="auth-card">
         <h1>Create Account</h1>
-
         <p>Join Loditojo Gadgets today.</p>
 
-        <form
-          className="auth-form"
-          autoComplete="off"
-          onSubmit={handleSubmit}
-        >
+        <form className="auth-form" autoComplete="off" onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Full Name"
             value={fullName}
-            onChange={(e) =>
-              setFullName(e.target.value)
-            }
+            onChange={(e) => setFullName(e.target.value)}
             required
           />
 
@@ -105,9 +81,7 @@ const Register = () => {
             type="email"
             placeholder="Email Address"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
 
@@ -115,32 +89,54 @@ const Register = () => {
             type="tel"
             placeholder="Phone Number"
             value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value)
-            }
+            onChange={(e) => setPhone(e.target.value)}
           />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
-            required
-          />
+          {/* Password */}
+          <div className="password-field">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <AiOutlineEyeInvisible size={20} />
+              ) : (
+                <AiOutlineEye size={20} />
+              )}
+            </button>
+          </div>
 
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) =>
-              setConfirmPassword(
-                e.target.value
-              )
-            }
-            required
-          />
+          {/* Confirm Password */}
+          <div className="password-field">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+            >
+              {showConfirmPassword ? (
+                <AiOutlineEyeInvisible size={20} />
+              ) : (
+                <AiOutlineEye size={20} />
+              )}
+            </button>
+          </div>
 
           <h3>Delivery Address</h3>
 
@@ -148,9 +144,7 @@ const Register = () => {
             type="text"
             placeholder="Street"
             value={street}
-            onChange={(e) =>
-              setStreet(e.target.value)
-            }
+            onChange={(e) => setStreet(e.target.value)}
             required
           />
 
@@ -159,19 +153,14 @@ const Register = () => {
               type="text"
               placeholder="City"
               value={city}
-              onChange={(e) =>
-                setCity(e.target.value)
-              }
+              onChange={(e) => setCity(e.target.value)}
               required
             />
-
             <input
               type="text"
               placeholder="State"
               value={state}
-              onChange={(e) =>
-                setState(e.target.value)
-              }
+              onChange={(e) => setState(e.target.value)}
               required
             />
           </div>
@@ -180,35 +169,28 @@ const Register = () => {
             type="text"
             placeholder="Country"
             value={country}
-            onChange={(e) =>
-              setCountry(e.target.value)
-            }
+            onChange={(e) => setCountry(e.target.value)}
             required
           />
 
           <label className="checkbox">
-            <input
-              type="checkbox"
-              required
-            />
-            I agree to the Terms &
-            Conditions
+            <input type="checkbox" required />
+            I agree to the Terms & Conditions
           </label>
 
           <label className="checkbox">
             <input type="checkbox" />
-            Send me exclusive offers
-            and updates
+            Send me exclusive offers and updates
           </label>
 
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Creating Account..."
-              : "Create Account"}
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating Account..." : "Create Account"}
           </button>
+
+          <p className="switch-auth">
+            Already have an account?
+            <Link to="/login">Login</Link>
+          </p>
         </form>
       </div>
     </section>

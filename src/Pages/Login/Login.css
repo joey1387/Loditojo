@@ -1,23 +1,194 @@
-.forgot-password{
-display:flex;
-justify-content:flex-end;
-margin-top:-8px;
+/* ==========================================
+   AUTH PAGE & CARD
+========================================== */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    background: #f8fafc;
 }
 
-.forgot-password a{
-text-decoration:none;
-color:#6C2BD9;
-font-weight:600;
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    padding: 45px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
 }
 
-.switch-auth{
-text-align:center;
-margin-top:10px;
+.auth-card h1 {
+    text-align: center;
+    color: #6C2BD9;
+    margin-bottom: 10px;
+    font-size: 38px;
 }
 
-.switch-auth a{
-margin-left:6px;
-color:#6C2BD9;
-font-weight:700;
-text-decoration:none;
+.auth-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 35px;
+    font-size: 16px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+/* ==========================================
+   INPUT CONTAINERS & FIXES
+========================================== */
+
+.input-field {
+    position: relative !important;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Base Input Styling with explicit inner paddings */
+.input-field input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+    padding-left: 52px !important;  /* Space so left icon never covers text */
+    padding-right: 52px !important; /* Space so right eye icon stays inside */
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    font-size: 16px;
+    color: #333 !important;
+    background-color: #fff !important;
+    transition: border-color 0.3s ease;
+}
+
+.input-field input:focus {
+    outline: none;
+    border-color: #6C2BD9;
+}
+
+/* Fix browser autofill dark/blue overlay */
+.input-field input:-webkit-autofill,
+.input-field input:-webkit-autofill:hover, 
+.input-field input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+    -webkit-text-fill-color: #333 !important;
+}
+
+/* Left Envelope / Lock Icons */
+.input-icon {
+    position: absolute !important;
+    left: 18px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #888;
+    font-size: 18px;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Password Eye Button inside input box */
+.toggle-password {
+    position: absolute !important;
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 32px;
+    height: 32px;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    border: none !important;
+    background: transparent !important; /* Removes solid button background */
+    box-shadow: none !important;
+    outline: none !important;
+    color: #666 !important;
+    cursor: pointer;
+    padding: 0 !important;
+    z-index: 3;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: #6C2BD9 !important;
+}
+
+/* ==========================================
+   FORGOT PASSWORD & BUTTONS
+========================================== */
+
+.forgot-password {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+}
+
+.forgot-password a {
+    color: #16A34A;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.forgot-password a:hover {
+    color: #6C2BD9;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #16A34A;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background: #6C2BD9;
+}
+
+.submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.switch-auth {
+    text-align: center;
+    color: #666;
+}
+
+.switch-auth a {
+    margin-left: 6px;
+    color: #16A34A;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.switch-auth a:hover {
+    color: #6C2BD9;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 28px 20px;
+    }
+    .auth-card h1 {
+        font-size: 28px;
+    }
+    .input-field input {
+        padding-left: 46px !important;
+        padding-right: 46px !important;
+        font-size: 15px;
+    }
 }

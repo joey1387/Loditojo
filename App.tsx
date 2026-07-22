@@ -24,6 +24,10 @@ import AIChat from "./src/Components/AIChat/AIChat";
 import OrderTracking from "./src/Pages/OrderTracking/OrderTracking";
 import OrderHistory from "./src/Pages/OrderHistory/OrderHistory";
 import PaymentVerify from "./src/Pages/PaymentVerify/PaymentVerify";
+import Profile from "./src/Pages/Profile/Profile";
+import Inbox from "./src/Pages/Inbox/Inbox";
+import Settings from "./src/Pages/Settings/Settings";
+import EditProfile from "./src/Pages/EditProfile/EditProfile";
 
 function App() {
   return (
@@ -35,6 +39,40 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/product/:id"element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
+       <Route
+  path="/profile"
+  element={
+    <ProtectedRoute>
+      <Profile />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/inbox"
+  element={
+    <ProtectedRoute>
+      <Inbox />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/settings"
+  element={
+    <ProtectedRoute>
+      <Settings />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/edit-profile"
+  element={
+    <ProtectedRoute>
+      <EditProfile />
+    </ProtectedRoute>
+  }
+/>
        <Route path="/checkout"element={
     <ProtectedRoute>
       <Checkout />
@@ -46,7 +84,7 @@ function App() {
   element={<Compare />}
 />
 <Route
-  path="/track-order"
+  path="/track-order/:id"
   element={<OrderTracking />}
 />
 <Route
@@ -62,6 +100,7 @@ function App() {
     </ProtectedRoute>
   }
 />
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

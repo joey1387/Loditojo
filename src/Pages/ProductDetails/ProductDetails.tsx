@@ -4,17 +4,14 @@ import { AiFillStar } from "react-icons/ai";
 import { useCart } from "../../context/CartContext";
 import { useEffect, useState } from "react";
 import ProductCard from "../../Components/ProductCard/ProductCard";
+import { toast } from "react-toastify";
 
 import {
   saveRecentlyViewed,
   getRecentlyViewed,
 } from "../../utils/recentlyViewed";
 
-import {
-  getReviews,
-  saveReviews,
-} from "../../utils/reviewStorage";
-
+import { getReviews, createReview } from "../../utils/reviewStorage";
 import {
   getProductById,
   getRelatedProducts,
@@ -24,112 +21,76 @@ import { Product } from "../../types/Product";
 
 const ProductDetails = () => {
   const { id } = useParams();
-
   const navigate = useNavigate();
-
   const { addToCart } = useCart();
 
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [recentProducts, setRecentProducts] = useState<Product[]>([]);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const [product, setProduct] =
-    useState<Product | null>(null);
-
-  const [relatedProducts, setRelatedProducts] =
-    useState<Product[]>([]);
-
-  const [recentProducts, setRecentProducts] =
-    useState<Product[]>([]);
-
-  const [selectedImage, setSelectedImage] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [reviews, setReviews] =
-    useState<any[]>([]);
-
-  const [reviewName, setReviewName] =
-    useState("");
-
-  const [reviewComment, setReviewComment] =
-    useState("");
-
-  const [reviewRating, setReviewRating] =
-    useState(5);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         if (!id) return;
-
         setLoading(true);
 
         const data = await getProductById(id);
 
         const formatted: Product = {
-          id: Number(data._id),
+          id: Number(data._id) || data.id,
           name: data.name,
-          category: data.category?.name || "",
-          price: data.basePrice,
-          rating: data.ratings?.average || 0,
+          category: data.category?.name || data.category || "",
+          price: data.basePrice || data.price,
+          rating: data.ratings?.average || data.rating || 0,
           stock: data.stock,
-          featured: data.isFeatured,
-          image: data.images?.[0] || "",
-          images: data.images || [],
+          featured: data.isFeatured || data.featured,
+          image: data.images?.[0] || data.image || "",
+          images: data.images || [data.image],
           description: data.description,
-          specifications: data.specs || {},
-          reviews: [],
+          specifications: data.specs || data.specifications || {},
+          reviews: data.reviews || [],
         };
 
         setProduct(formatted);
-
         setSelectedImage(formatted.image);
 
         saveRecentlyViewed(String(formatted.id));
 
-        setReviews(
-          getReviews(
-            formatted.id,
-            formatted.reviews
-          )
-        );
+        try {
+          const reviewData = await getReviews(formatted.id);
+          setReviews(reviewData.reviews || reviewData);
+        } catch {
+          setReviews(formatted.reviews || []);
+        }
 
-        const related =
-          await getRelatedProducts(id);
+        const related = await getRelatedProducts(id);
 
-        const formattedRelated =
-          related.map((item: any) => ({
-            id: Number(item._id),
-            name: item.name,
-            category:
-              item.category?.name || "",
-            price: item.basePrice,
-            rating:
-              item.ratings?.average || 0,
-            stock: item.stock,
-            featured:
-              item.isFeatured,
-            image:
-              item.images?.[0] || "",
-            images:
-              item.images || [],
-            description:
-              item.description,
-            specifications:
-              item.specs || {},
-            reviews: [],
-          }));
+        const formattedRelated = related.map((item: any) => ({
+          id: Number(item._id) || item.id,
+          name: item.name,
+          category: item.category?.name || item.category || "",
+          price: item.basePrice || item.price,
+          rating: item.ratings?.average || item.rating || 0,
+          stock: item.stock,
+          featured: item.isFeatured || item.featured,
+          image: item.images?.[0] || item.image || "",
+          images: item.images || [item.image],
+          description: item.description,
+          specifications: item.specs || item.specifications || {},
+          reviews: [],
+        }));
 
-        setRelatedProducts(
-          formattedRelated
-        );
-
+        setRelatedProducts(formattedRelated);
         setRecentProducts(
-          getRecentlyViewed([
-            formatted,
-            ...formattedRelated,
-          ])
+          getRecentlyViewed([formatted, ...formattedRelated])
         );
       } catch (err) {
         console.error(err);
@@ -140,98 +101,77 @@ const ProductDetails = () => {
 
     fetchProduct();
   }, [id]);
-    if (loading) {
+
+  if (loading) {
     return (
       <div className="product-details-loading">
-        <h2>Loading Product...</h2>
+        <div className="spinner"></div>
+        <h2>Loading Product Details...</h2>
       </div>
     );
   }
 
   if (!product) {
-    return <h2>Product not found.</h2>;
+    return (
+      <div className="product-details-empty">
+        <h2>Product not found.</h2>
+        <button onClick={() => navigate("/shop")}>Back to Shop</button>
+      </div>
+    );
   }
 
-  const submitReview = () => {
-    if (
-      !reviewName.trim() ||
-      !reviewComment.trim()
-    )
+  const submitReview = async () => {
+    if (!reviewName.trim()) {
+      toast.error("Please enter your name.");
       return;
+    }
 
-    const newReview = {
-      id: Date.now(),
-      name: reviewName,
-      rating: reviewRating,
-      comment: reviewComment,
-      date: new Date().toLocaleDateString(),
-    };
+    if (!reviewComment.trim()) {
+      toast.error("Please enter your review.");
+      return;
+    }
 
-    const updatedReviews = [
-      newReview,
-      ...reviews,
-    ];
-
-    setReviews(updatedReviews);
-
-    saveReviews(
-      product.id,
-      updatedReviews
-    );
-
-    setReviewName("");
-    setReviewComment("");
-    setReviewRating(5);
+    try {
+      await createReview(product.id, reviewRating, reviewComment, reviewName);
+      const reviewData = await getReviews(product.id);
+      setReviews(reviewData.reviews || reviewData);
+      setReviewComment("");
+      setReviewName("");
+      setReviewRating(5);
+      toast.success("Review submitted successfully.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Unable to submit review.");
+    }
   };
 
   return (
-    <>
+    <div className="product-details-page">
       <section className="product-details">
-
         <div className="product-image">
-
           <img
             className="main-product-image"
-            src={
-              selectedImage ||
-              product.image
-            }
+            src={selectedImage || product.image}
             alt={product.name}
           />
 
           <div className="thumbnail-images">
-
             {(product.images.length
               ? product.images
-              : [
-                  product.image,
-                  product.image,
-                  product.image,
-                  product.image,
-                ]).map(
-              (image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`${product.name}-${index}`}
-                  className={
-                    selectedImage === image
-                      ? "active-thumbnail"
-                      : ""
-                  }
-                  onClick={() =>
-                    setSelectedImage(image)
-                  }
-                />
-              )
-            )}
-
+              : [product.image, product.image, product.image]
+            ).map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`${product.name}-${index}`}
+                className={selectedImage === image ? "active-thumbnail" : ""}
+                onClick={() => setSelectedImage(image)}
+              />
+            ))}
           </div>
-
         </div>
 
         <div className="product-info">
-
           <span className="product-category">
             {product.category.toUpperCase()}
           </span>
@@ -239,95 +179,63 @@ const ProductDetails = () => {
           <h1>{product.name}</h1>
 
           <div className="product-rating">
-            <AiFillStar />
+            <AiFillStar className="star-icon" />
             <span>{product.rating}</span>
+            <small>({reviews.length} reviews)</small>
           </div>
 
-          <h2>
-            ₦{product.price.toLocaleString()}
-          </h2>
+          <h2>₦{product.price.toLocaleString()}</h2>
 
-          <p>{product.description}</p>
+          <p className="description-text">{product.description}</p>
 
-          <p
-            className={
-              product.stock > 0
-                ? "in-stock"
-                : "out-stock"
-            }
-          >
-            {product.stock > 0
-              ? `${product.stock} in stock`
-              : "Out of stock"}
+          <p className={product.stock > 0 ? "in-stock" : "out-stock"}>
+            {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
           </p>
 
-          <div className="specifications-card">
-
-            <h3>Specifications</h3>
-
-            <div className="spec-grid">
-
-              {Object.entries(
-                product.specifications || {}
-              ).map(([key, value]) => (
-
-                <div key={key}>
-
-                  <span>{key}</span>
-
-                  <strong>
-                    {String(value)}
-                  </strong>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-                    <div className="quantity-section">
-
-            <h4>Quantity</h4>
-
-            <div className="quantity-box">
-
-              <button
-                onClick={() =>
-                  setQuantity((q) =>
-                    Math.max(1, q - 1)
+          {Object.keys(product.specifications || {}).length > 0 && (
+            <div className="specifications-card">
+              <h3>Specifications</h3>
+              <div className="spec-grid">
+                {Object.entries(product.specifications || {}).map(
+                  ([key, value]) => (
+                    <div key={key}>
+                      <span>{key}</span>
+                      <strong>{String(value)}</strong>
+                    </div>
                   )
-                }
+                )}
+              </div>
+            </div>
+          )}
+
+          <div className="quantity-section">
+            <h4>Quantity</h4>
+            <div className="quantity-box">
+              <button
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
               >
                 -
               </button>
-
               <span>{quantity}</span>
-
               <button
-                onClick={() =>
-                  setQuantity((q) => q + 1)
-                }
+                onClick={() => setQuantity((q) => q + 1)}
+                aria-label="Increase quantity"
               >
                 +
               </button>
-
             </div>
-
           </div>
 
           <div className="product-buttons">
-
             <button
               className="add-cart"
+              disabled={product.stock <= 0}
               onClick={() => {
-                for (
-                  let i = 0;
-                  i < quantity;
-                  i++
-                ) {
+                for (let i = 0; i < quantity; i++) {
                   addToCart(product);
                 }
+                toast.success(`Added ${quantity} item(s) to cart`);
               }}
             >
               Add to Cart
@@ -335,183 +243,102 @@ const ProductDetails = () => {
 
             <button
               className="buy-now"
+              disabled={product.stock <= 0}
               onClick={() => {
-                for (
-                  let i = 0;
-                  i < quantity;
-                  i++
-                ) {
+                for (let i = 0; i < quantity; i++) {
                   addToCart(product);
                 }
-
                 navigate("/checkout");
               }}
             >
               Buy Now
             </button>
-
           </div>
-
         </div>
-
       </section>
 
       <section className="reviews-section">
-
-        <h2>
-          Customer Reviews ({reviews.length})
-        </h2>
+        <h2>Customer Reviews ({reviews.length})</h2>
 
         <div className="review-form">
-
           <h3>Leave a Review</h3>
-
           <input
             type="text"
             placeholder="Your Name"
             value={reviewName}
-            onChange={(e) =>
-              setReviewName(e.target.value)
-            }
+            onChange={(e) => setReviewName(e.target.value)}
           />
 
           <select
             value={reviewRating}
-            onChange={(e) =>
-              setReviewRating(
-                Number(e.target.value)
-              )
-            }
+            onChange={(e) => setReviewRating(Number(e.target.value))}
           >
-            <option value={5}>
-              ★★★★★ (5)
-            </option>
-
-            <option value={4}>
-              ★★★★☆ (4)
-            </option>
-
-            <option value={3}>
-              ★★★☆☆ (3)
-            </option>
-
-            <option value={2}>
-              ★★☆☆☆ (2)
-            </option>
-
-            <option value={1}>
-              ★☆☆☆☆ (1)
-            </option>
-
+            <option value={5}>★★★★★ (5)</option>
+            <option value={4}>★★★★☆ (4)</option>
+            <option value={3}>★★★☆☆ (3)</option>
+            <option value={2}>★★☆☆☆ (2)</option>
+            <option value={1}>★☆☆☆☆ (1)</option>
           </select>
 
           <textarea
             rows={4}
             placeholder="Write your review..."
             value={reviewComment}
-            onChange={(e) =>
-              setReviewComment(
-                e.target.value
-              )
-            }
+            onChange={(e) => setReviewComment(e.target.value)}
           />
 
-          <button
-            className="submit-review-btn"
-            onClick={submitReview}
-          >
+          <button className="submit-review-btn" onClick={submitReview}>
             Submit Review
           </button>
-
         </div>
 
-        {reviews.map(
-          (review, index) => (
-
-            <div
-              key={review.id || index}
-              className="review-card"
-            >
-
-              <h4>{review.name}</h4>
-
-              <div className="review-rating">
-                {"⭐".repeat(review.rating)}
+        <div className="reviews-list">
+          {reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <div key={review.id || index} className="review-card">
+                <h4>{review.name || "Anonymous User"}</h4>
+                <div className="review-rating">
+                  {"★".repeat(review.rating || 5)}
+                </div>
+                <p>{review.comment}</p>
+                <small>{review.date || "Recently"}</small>
               </div>
-
-              <p>{review.comment}</p>
-
-              <small>{review.date}</small>
-
-            </div>
-
-          )
-        )}
-
-      </section>
-            <section className="related-products">
-
-        <div className="section-header">
-
-          <h2>You May Also Like</h2>
-
+            ))
+          ) : (
+            <p className="no-reviews">No reviews yet. Be the first to review!</p>
+          )}
         </div>
+      </section>
 
-        <div className="related-grid">
+      {relatedProducts.length > 0 && (
+        <section className="related-products">
+          <div className="section-header">
+            <h2>You May Also Like</h2>
+          </div>
+          <div className="related-grid">
+            {relatedProducts.slice(0, 4).map((item) => (
+              <ProductCard key={item.id} {...item} />
+            ))}
+          </div>
+        </section>
+      )}
 
-          {relatedProducts.length > 0 ? (
-
-            relatedProducts
+      {recentProducts.filter((item) => item.id !== product.id).length > 0 && (
+        <section className="related-products">
+          <div className="section-header">
+            <h2>Recently Viewed</h2>
+          </div>
+          <div className="related-grid">
+            {recentProducts
+              .filter((item) => item.id !== product.id)
               .slice(0, 4)
               .map((item) => (
-
-                <ProductCard
-                  key={item.id}
-                  {...item}
-                />
-
-              ))
-
-          ) : (
-
-            <p>No related products.</p>
-
-          )}
-
-        </div>
-
-      </section>
-
-      <section className="related-products">
-
-        <div className="section-header">
-
-          <h2>Recently Viewed</h2>
-
-        </div>
-
-        <div className="related-grid">
-
-          {recentProducts
-            .filter(
-              (item) =>
-                item.id !== product.id
-            )
-            .slice(0, 4)
-            .map((item) => (
-
-              <ProductCard
-                key={item.id}
-                {...item}
-              />
-
-            ))}
-
-        </div>
-
-      </section>
-
-    </>
+                <ProductCard key={item.id} {...item} />
+              ))}
+          </div>
+        </section>
+      )}
+    </div>
   );
 };
 

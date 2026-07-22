@@ -1,149 +1,119 @@
-.product-section{
-
-padding:110px 8%;
-
-background:white;
-
+/* ==========================================================================
+   FEATURED PRODUCT SECTION
+   ========================================================================== */
+.product-section {
+  padding: 90px 6%;
+  background: var(--bg, #ffffff);
+  width: 100%;
 }
 
-.section-top{
-
-text-align:center;
-
-max-width:760px;
-
-margin:auto;
-
-margin-bottom:70px;
-
+.section-top {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 50px;
 }
 
-.section-tag{
-
-display:inline-block;
-
-padding:10px 22px;
-
-background:#EEE8FF;
-
-color:#6C2BD9;
-
-border-radius:40px;
-
-font-weight:700;
-
-letter-spacing:1px;
-
-margin-bottom:25px;
-
+.section-tag {
+  display: inline-block;
+  padding: 8px 20px;
+  background: #eee8ff;
+  color: var(--primary, #6c2bd9);
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
 }
 
-.section-top h2{
-
-font-size:3rem;
-
-color:#111827;
-
-margin-bottom:18px;
-
-font-weight:800;
-
+.section-top h2 {
+  font-size: 2.8rem;
+  color: var(--text, #111827);
+  margin-bottom: 16px;
+  font-weight: 800;
 }
 
-.section-top p{
-
-font-size:18px;
-
-color:#6B7280;
-
-line-height:1.8;
-
+.section-top p {
+  font-size: 17px;
+  color: var(--text-muted, #6b7280);
+  line-height: 1.7;
 }
 
-.products-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-
-gap:35px;
-
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 28px;
+  width: 100%;
 }
 
-.view-all-container{
-
-display:flex;
-
-justify-content:center;
-
-margin-top:70px;
-
+.view-all-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
 }
 
-.view-all-btn{
-
-padding:18px 42px;
-
-background:#6C2BD9;
-
-border:none;
-
-border-radius:16px;
-
-color:white;
-
-font-size:17px;
-
-font-weight:700;
-
-cursor:pointer;
-
-transition:.35s;
-
-box-shadow:0 15px 35px rgba(108,43,217,.28);
-
+.view-all-btn {
+  padding: 16px 40px;
+  background: var(--primary, #6c2bd9);
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 12px 28px rgba(108, 43, 217, 0.25);
 }
 
-.view-all-btn:hover{
-
-transform:translateY(-6px);
-
-box-shadow:0 22px 45px rgba(108,43,217,.40);
-
+.view-all-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(108, 43, 217, 0.35);
+  background: #5b21b6;
 }
 
-@media(max-width:768px){
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 992px) {
+  .product-section {
+    padding: 70px 5%;
+  }
 
-.product-section{
-
-padding:80px 5%;
-
+  .section-top h2 {
+    font-size: 2.3rem;
+  }
 }
 
-.section-top h2{
+@media (max-width: 768px) {
+  .product-section {
+    padding: 50px 4%;
+  }
 
-font-size:2.3rem;
+  .section-top {
+    margin-bottom: 35px;
+  }
 
+  .section-top h2 {
+    font-size: 1.9rem;
+  }
+
+  .section-top p {
+    font-size: 15px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+  }
+
+  .view-all-btn {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
-.section-top p{
-
-font-size:16px;
-
-}
-
-.products-grid{
-
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-
-gap:25px;
-
-}
-
-.view-all-btn{
-
-width:100%;
-
-}
-
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 14px;
+  }
 }

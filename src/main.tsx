@@ -10,14 +10,13 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { CompareProvider } from "./context/CompareContext";
-import { ThemeProvider } from "./context/ThemeContext";
+
 
 ReactDOM.createRoot(
   document.getElementById("root")!
 ).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
@@ -38,7 +37,6 @@ ReactDOM.createRoot(
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
-      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

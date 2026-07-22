@@ -1,29 +1,98 @@
 import "./OrderTracking.css";
-import { FaBoxOpen, FaCheckCircle, FaTruck, FaMapMarkerAlt } from "react-icons/fa";
+import {
+  FaBoxOpen,
+  FaCheckCircle,
+  FaTruck,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const OrderTracking = () => {
-  const order = {
-    orderNumber: "LDT-240713-001",
-    customer: "Joseph Forghe",
-    status: "Out for Delivery",
-    estimated: "Tomorrow, 10:00 AM - 2:00 PM",
-    address: "Enugu, Nigeria",
-    payment: "Paid",
-    items: [
-      {
-        name: "iPhone 15 Pro",
-        quantity: 1,
-        price: 1850000,
-      },
-      {
-        name: "Apple Watch Series 10",
-        quantity: 1,
-        price: 750000,
-      },
-    ],
-  };
+
+  const { id } = useParams();
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [order, setOrder] =
+    useState<any>(null);
+
+  useEffect(() => {
+
+    const fetchOrder = async () => {
+
+      try {
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/orders/${id}`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            "Unable to fetch order."
+          );
+        }
+
+        const data =
+          await response.json();
+
+        setOrder(
+          data.order || data
+        );
+
+      } catch (error) {
+
+        console.error(error);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    fetchOrder();
+
+  }, [id]);
+
+  if (loading) {
+
+    return (
+      <div className="loading-page">
+        Loading order...
+      </div>
+    );
+
+  }
+
+  if (!order) {
+
+    return (
+      <div className="loading-page">
+        Order not found.
+      </div>
+    );
+
+  }
+
+  const progress =
+    order.status === "Pending"
+      ? 20
+      : order.status === "Processing"
+      ? 45
+      : order.status === "Out for Delivery"
+      ? 75
+      : order.status === "Delivered"
+      ? 100
+      : 0;
 
   return (
+
     <section className="order-page">
 
       <div className="order-header">
@@ -31,8 +100,15 @@ const OrderTracking = () => {
         <h1>Track Your Order</h1>
 
         <p>
+
           Order Number:
-          <strong> {order.orderNumber}</strong>
+
+          <strong>
+            {" "}
+            {order.orderNumber ||
+              order._id}
+          </strong>
+
         </p>
 
       </div>
@@ -56,7 +132,7 @@ const OrderTracking = () => {
             <h3>Payment</h3>
 
             <span className="paid">
-              {order.payment}
+              {order.paymentStatus}
             </span>
 
           </div>
@@ -65,33 +141,56 @@ const OrderTracking = () => {
 
         <div className="progress">
 
-          <div className="progress-fill"></div>
+          <div
+            className="progress-fill"
+            style={{
+              width: `${progress}%`,
+            }}
+          />
 
         </div>
 
         <div className="timeline">
-
-          <div className="active">
+                    <div
+            className={
+              progress >= 20
+                ? "active"
+                : ""
+            }
+          >
             <FaCheckCircle />
             <p>Order Placed</p>
           </div>
 
-          <div className="active">
-            <FaCheckCircle />
-            <p>Payment Confirmed</p>
-          </div>
-
-          <div className="active">
+          <div
+            className={
+              progress >= 45
+                ? "active"
+                : ""
+            }
+          >
             <FaBoxOpen />
             <p>Processing</p>
           </div>
 
-          <div className="active">
+          <div
+            className={
+              progress >= 75
+                ? "active"
+                : ""
+            }
+          >
             <FaTruck />
             <p>Out for Delivery</p>
           </div>
 
-          <div>
+          <div
+            className={
+              progress === 100
+                ? "active"
+                : ""
+            }
+          >
             <FaMapMarkerAlt />
             <p>Delivered</p>
           </div>
@@ -105,16 +204,25 @@ const OrderTracking = () => {
         <h2>Delivery Details</h2>
 
         <p>
-          <strong>Customer:</strong> {order.customer}
+          <strong>Customer:</strong>{" "}
+          {order.user?.name ||
+            order.customer?.name ||
+            "N/A"}
         </p>
 
         <p>
-          <strong>Address:</strong> {order.address}
+          <strong>Address:</strong>{" "}
+          {order.shippingAddress
+            ? `${order.shippingAddress.street}, ${order.shippingAddress.city}, ${order.shippingAddress.state}`
+            : "No address"}
         </p>
 
         <p>
-          <strong>Estimated Arrival:</strong>{" "}
-          {order.estimated}
+          <strong>
+            Estimated Arrival:
+          </strong>{" "}
+          {order.estimatedDelivery ||
+            "To be communicated"}
         </p>
 
       </div>
@@ -123,30 +231,44 @@ const OrderTracking = () => {
 
         <h2>Ordered Items</h2>
 
-        {order.items.map((item, index) => (
+        {order.items?.map(
+          (item: any) => (
 
-          <div
-            key={index}
-            className="item"
-          >
+            <div
+              key={
+                item._id ||
+                item.product
+              }
+              className="item"
+            >
 
-            <span>
-              {item.name}
-            </span>
+              <span>
+                {item.name ||
+                  item.product
+                    ?.name}
+              </span>
 
-            <span>x{item.quantity}</span>
+              <span>
+                x{item.quantity}
+              </span>
 
-            <strong>
-              ₦{item.price.toLocaleString()}
-            </strong>
+              <strong>
+                ₦
+                {(
+                  item.price *
+                  item.quantity
+                ).toLocaleString()}
+              </strong>
 
-          </div>
+            </div>
 
-        ))}
+          )
+        )}
 
       </div>
 
     </section>
+
   );
 };
 

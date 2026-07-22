@@ -1,0 +1,374 @@
+:root{
+
+/* =========================
+   COLORS
+========================= */
+
+--bg:#F8FAFC;
+--card:#FFFFFF;
+--surface:#F1F5F9;
+
+--text:#111827;
+--text2:#6B7280;
+--text3:#9CA3AF;
+
+--primary:#6C2BD9;
+--primary-light:#8B5CF6;
+
+--secondary:#16A34A;
+--secondary-light:#22C55E;
+
+--danger:#EF4444;
+--warning:#F59E0B;
+
+--border:#E5E7EB;
+
+
+/* =========================
+   SHADOWS
+========================= */
+
+--shadow-sm:0 2px 8px rgba(0,0,0,.05);
+
+--shadow:
+0 10px 30px rgba(0,0,0,.08);
+
+--shadow-lg:
+0 20px 50px rgba(0,0,0,.12);
+
+
+/* =========================
+   BORDER RADIUS
+========================= */
+
+--radius-sm:8px;
+--radius:14px;
+--radius-lg:22px;
+
+
+/* =========================
+   SPACING
+========================= */
+
+--space-xs:.5rem;
+--space-sm:.75rem;
+--space:1rem;
+--space-lg:1.5rem;
+--space-xl:2rem;
+
+
+/* =========================
+   TRANSITIONS
+========================= */
+
+--transition:.3s ease;
+
+}
+
+
+/* ==========================================
+   DARK MODE
+========================================== */
+
+body[data-theme="dark"]{
+
+--bg:#0F172A;
+
+--card:#1E293B;
+
+--surface:#273449;
+
+--text:#F8FAFC;
+
+--text2:#CBD5E1;
+
+--text3:#94A3B8;
+
+--border:#334155;
+
+--primary:#8B5CF6;
+
+--primary-light:#A78BFA;
+
+--secondary:#22C55E;
+
+--secondary-light:#4ADE80;
+
+--shadow-sm:none;
+
+--shadow:
+0 10px 30px rgba(0,0,0,.35);
+
+--shadow-lg:
+0 20px 60px rgba(0,0,0,.45);
+
+}
+
+
+/* ==========================================
+   GLOBAL ELEMENTS
+========================================== */
+
+body{
+
+background:var(--bg);
+
+color:var(--text);
+
+transition:background .3s,color .3s;
+
+}
+
+
+section,
+main,
+footer,
+header,
+nav{
+
+background:transparent;
+
+}
+
+
+h1,h2,h3,h4,h5,h6{
+
+color:var(--text);
+
+}
+
+
+p,
+span,
+small,
+label{
+
+color:var(--text2);
+
+}
+
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+input,
+textarea,
+select{
+
+width:100%;
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+color:var(--text);
+
+border-radius:12px;
+
+padding:14px 16px;
+
+outline:none;
+
+transition:var(--transition);
+
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+
+border-color:var(--primary);
+
+box-shadow:0 0 0 4px rgba(108,43,217,.12);
+
+}
+
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+button{
+
+border:none;
+
+outline:none;
+
+}
+
+.primary-btn{
+
+background:var(--primary);
+
+color:white;
+
+padding:14px 26px;
+
+border-radius:12px;
+
+font-weight:600;
+
+transition:var(--transition);
+
+}
+
+.primary-btn:hover{
+
+background:var(--secondary);
+
+transform:translateY(-2px);
+
+}
+
+.secondary-btn{
+
+background:transparent;
+
+border:2px solid var(--primary);
+
+color:var(--primary);
+
+padding:13px 26px;
+
+border-radius:12px;
+
+font-weight:600;
+
+transition:var(--transition);
+
+}
+
+.secondary-btn:hover{
+
+background:var(--primary);
+
+color:white;
+
+}
+
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.card{
+
+background:var(--card);
+
+border-radius:20px;
+
+box-shadow:var(--shadow);
+
+padding:24px;
+
+transition:var(--transition);
+
+}
+
+.card:hover{
+
+transform:translateY(-4px);
+
+}
+
+
+/* ==========================================
+   PRODUCT CARDS
+========================================== */
+
+.product-card,
+.review-card,
+.cart-item,
+.compare-product,
+.wishlist-item,
+.checkout-card,
+.quickview-modal,
+.settings-card,
+.profile-card,
+.order-card{
+
+background:var(--card);
+
+box-shadow:var(--shadow);
+
+border-radius:18px;
+
+}
+
+
+/* ==========================================
+   IMAGES
+========================================== */
+
+.hero,
+.category-card,
+.product-image{
+
+background:var(--surface);
+
+}
+
+
+/* ==========================================
+   LINKS
+========================================== */
+
+a{
+
+transition:var(--transition);
+
+}
+
+a:hover{
+
+color:var(--primary);
+
+}
+
+
+/* ==========================================
+   RESPONSIVE VARIABLES
+========================================== */
+
+@media(max-width:1200px){
+
+:root{
+
+--space-xl:1.8rem;
+
+}
+
+}
+
+@media(max-width:992px){
+
+:root{
+
+--radius-lg:18px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+:root{
+
+--space:0.9rem;
+
+--space-lg:1.2rem;
+
+}
+
+}
+
+@media(max-width:480px){
+
+:root{
+
+--radius:12px;
+
+}
+
+}

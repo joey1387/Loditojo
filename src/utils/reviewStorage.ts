@@ -1,24 +1,73 @@
-import { Review } from "../types/Product";
-
-export const getReviews = (
-  productId: string,
-  defaultReviews: any[]
+export const getReviews = async (
+  productId: string
 ) => {
-  const saved = localStorage.getItem(
-    `reviews-${productId}`
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/reviews/product/${productId}`,
+    {
+      credentials: "include",
+    }
   );
 
-  return saved
-    ? JSON.parse(saved)
-    : defaultReviews;
+  return await response.json();
 };
 
-export const saveReviews = (
+export const createReview = async (
   productId: string,
-  reviews: any[]
+  rating: number,
+  comment: string
 ) => {
-  localStorage.setItem(
-    `reviews-${productId}`,
-    JSON.stringify(reviews)
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/reviews`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId,
+        rating,
+        comment,
+      }),
+    }
   );
+
+  return await response.json();
+};
+
+export const updateReview = async (
+  reviewId: string,
+  rating: number,
+  comment: string
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        rating,
+        comment,
+      }),
+    }
+  );
+
+  return await response.json();
+};
+
+export const deleteReview = async (
+  reviewId: string
+) => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
+
+  return await response.json();
 };

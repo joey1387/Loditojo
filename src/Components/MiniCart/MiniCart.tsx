@@ -90,14 +90,6 @@ const MiniCart = ({ open, onClose }: Props) => {
                     </small>
                   </div>
 
-                  <button
-                    className="remove-mini-item"
-                    onClick={() =>
-                      removeFromCart(item.id)
-                    }
-                  >
-                    <FaTrash />
-                  </button>
                 </div>
               ))}
             </div>

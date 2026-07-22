@@ -18,98 +18,89 @@ import {
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-grid">
-        <div className="footer-brand">
-          <img
-            src={logo}
-            alt="Loditojo Gadgets"
-          />
+      <div className="footer-container">
+        <div className="footer-grid">
+          {/* Brand Info */}
+          <div className="footer-brand">
+            <Link to="/" className="footer-logo">
+              <img src={logo} alt="Loditojo Gadgets" />
+            </Link>
 
-          <p>
-            Premium gadgets for modern lifestyles.
-            We provide authentic smartphones,
-            laptops, gaming devices and accessories
-            with fast nationwide delivery.
-          </p>
+            <p className="brand-desc">
+              Premium gadgets for modern lifestyles. We provide authentic smartphones,
+              laptops, gaming devices, and accessories with fast nationwide delivery.
+            </p>
 
-          <div className="social-icons">
-            <a href="#">
-              <FaFacebookF />
-            </a>
+            <div className="social-icons">
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook">
+                <FaFacebookF />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram">
+                <FaInstagram />
+              </a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter">
+                <FaTwitter />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <FaLinkedinIn />
+              </a>
+            </div>
+          </div>
 
-            <a href="#">
-              <FaInstagram />
-            </a>
+          {/* Quick Links */}
+          <div className="footer-col">
+            <h3>Quick Links</h3>
+            <ul className="footer-links">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/shop">Shop</Link></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
+            </ul>
+          </div>
 
-            <a href="#">
-              <FaTwitter />
-            </a>
+          {/* Product Categories */}
+          <div className="footer-col">
+            <h3>Categories</h3>
+            <ul className="footer-links">
+              <li><Link to="/shop?category=phones">Phones</Link></li>
+              <li><Link to="/shop?category=laptops">Laptops</Link></li>
+              <li><Link to="/shop?category=accessories">Accessories</Link></li>
+              <li><Link to="/shop">All Products</Link></li>
+            </ul>
+          </div>
 
-            <a href="#">
-              <FaLinkedinIn />
-            </a>
+          {/* Contact Details */}
+          <div className="footer-col">
+            <h3>Contact Us</h3>
+            <div className="footer-contact">
+              <p>
+                <FaPhoneAlt className="contact-icon" />
+                <span>+234 800 000 0000</span>
+              </p>
+              <p>
+                <FaEnvelope className="contact-icon" />
+                <span>support@loditojo.com</span>
+              </p>
+              <p>
+                <FaMapMarkerAlt className="contact-icon" />
+                <span>Enugu, Enugu State, Nigeria</span>
+              </p>
+            </div>
           </div>
         </div>
 
-        <div>
-          <h3>Quick Links</h3>
-
-          <Link to="/">Home</Link>
-          <Link to="/shop">Shop</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </div>
-
-        <div>
-          <h3>Categories</h3>
-
-          <Link to="/shop?category=phones">
-            Phones
-          </Link>
-
-          <Link to="/shop?category=laptops">
-            Laptops
-          </Link>
-
-          <Link to="/shop?category=accessories">
-            Accessories
-          </Link>
-
-          <Link to="/shop">
-            All Products
-          </Link>
-        </div>
-
-        <div>
-          <h3>Contact Us</h3>
-
-          <p>
-            <FaPhoneAlt />
-            +234 800 000 0000
+        {/* Footer Bottom Strip */}
+        <div className="footer-bottom">
+          <p className="copyright">
+            © {new Date().getFullYear()} Loditojo Gadgets. All Rights Reserved.
           </p>
 
-          <p>
-            <FaEnvelope />
-            support@loditojo.com
-          </p>
-
-          <p>
-            <FaMapMarkerAlt />
-            Enugu, Enugu State, Nigeria
-          </p>
+          <div className="payment-icons">
+            <FaCcVisa title="Visa" />
+            <FaCcMastercard title="Mastercard" />
+            <FaCcPaypal title="PayPal" />
+          </div>
         </div>
-      </div>
-
-      <div className="footer-bottom">
-        <div className="payment-icons">
-          <FaCcVisa />
-          <FaCcMastercard />
-          <FaCcPaypal />
-        </div>
-
-        <p>
-          © 2026 Loditojo Gadgets. All Rights Reserved.
-        </p>
       </div>
     </footer>
   );

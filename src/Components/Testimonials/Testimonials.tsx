@@ -1,4 +1,5 @@
 import "./Testimonials.css";
+import { FaStar } from "react-icons/fa";
 
 const testimonials = [
   {
@@ -24,32 +25,29 @@ const testimonials = [
 const Testimonials = () => {
   return (
     <section className="testimonials">
-
       <div className="testimonial-header">
         <p>TESTIMONIALS</p>
         <h2>What Our Customers Say</h2>
       </div>
 
       <div className="testimonial-grid">
-
         {testimonials.map((item, index) => (
-
           <div className="testimonial-card" key={index}>
-
-            <div className="stars">★★★★★</div>
+            <div className="stars">
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+              <FaStar />
+            </div>
 
             <p>"{item.review}"</p>
 
             <h3>{item.name}</h3>
-
             <span>{item.location}</span>
-
           </div>
-
         ))}
-
       </div>
-
     </section>
   );
 };
