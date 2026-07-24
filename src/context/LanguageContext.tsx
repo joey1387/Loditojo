@@ -199,7 +199,7 @@ const translations: Record<LanguageCode, Record<string, string>> = {
     searchPlaceholder: "Søk produkter...",
     selectCurrency: "Velg valuta", selectLanguage: "Velg språk",
     myProfile: "Min profil", orders: "Bestillinger", inbox: "Innboks",
-    becomeSeller: "Bli selger", settings: "Innstillinger", logout: "Logg ut",
+    becomeSeller: "Bli selger", settings: "Innstillinger", logout: "Log ut",
     welcome: "Velkommen til Loditojo!", login: "Logg inn", createAccount: "Opprett konto"
   },
   da: {
@@ -319,20 +319,35 @@ const translations: Record<LanguageCode, Record<string, string>> = {
 interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
+  supportedLanguages: LanguageOption[];
   t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<LanguageCode>("en");
+  const [language, setLanguage] = useState<LanguageCode>(() => {
+    const saved = localStorage.getItem("app_language") as LanguageCode;
+    return saved && translations[saved] ? saved : "en";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("app_language", language);
+  }, [language]);
 
   const t = (key: string): string => {
     return translations[language]?.[key] || translations.en[key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider
+      value={{
+        language,
+        setLanguage,
+        supportedLanguages: SUPPORTED_LANGUAGES,
+        t,
+      }}
+    >
       {children}
     </LanguageContext.Provider>
   );

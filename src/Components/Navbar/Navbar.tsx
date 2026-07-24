@@ -10,7 +10,6 @@ import {
 import {
   FaBalanceScale,
   FaUserCircle,
-  FaUser,
   FaCog,
   FaBoxOpen,
   FaInbox,
@@ -51,7 +50,6 @@ const Navbar = () => {
   const [languageOpen, setLanguageOpen] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [langFilter, setLangFilter] = useState("");
   const [currFilter, setCurrFilter] = useState("");
 
   const profileRef = useRef<HTMLDivElement>(null);
@@ -140,16 +138,19 @@ const Navbar = () => {
           {/* Language Switcher Dropdown */}
           <div className="language-menu" ref={languageRef}>
             <button
+              type="button"
               className="currency-btn"
               onClick={() => {
-                setLanguageOpen(!languageOpen);
+                setLanguageOpen((prev) => !prev);
                 setCurrencyOpen(false);
                 setProfileOpen(false);
               }}
               aria-label="Select Language"
             >
               <FaLanguage size={18} />
-              <span className="currency-btn-code">{(language || "en").toUpperCase()}</span>
+              <span className="currency-btn-code">
+                {(language || "en").toUpperCase()}
+              </span>
               <FaChevronDown
                 size={10}
                 className={`chevron-icon ${languageOpen ? "rotate" : ""}`}
@@ -160,39 +161,23 @@ const Navbar = () => {
               <div className="currency-dropdown lang-dropdown-large">
                 <div className="currency-dropdown-header">{t("selectLanguage")}</div>
 
-                {/* Language Filter Input */}
-                <div className="dropdown-search-box">
-                  <input
-                    type="text"
-                    placeholder="Search language..."
-                    value={langFilter}
-                    onChange={(e) => setLangFilter(e.target.value)}
-                  />
-                </div>
-
                 <div className="language-options-grid">
-                  {supportedLanguages
-                    .filter(
-                      (l) =>
-                        l.label.toLowerCase().includes(langFilter.toLowerCase()) ||
-                        l.nativeLabel.toLowerCase().includes(langFilter.toLowerCase())
-                    )
-                    .map((lang) => (
-                      <button
-                        key={lang.code}
-                        className={`lang-option-card ${
-                          lang.code === language ? "active" : ""
-                        }`}
-                        onClick={() => {
-                          setLanguage(lang.code as LanguageCode);
-                          setLanguageOpen(false);
-                          setLangFilter("");
-                        }}
-                      >
-                        <span className="lang-native">{lang.nativeLabel}</span>
-                        <span className="lang-sub">({lang.label})</span>
-                      </button>
-                    ))}
+                  {supportedLanguages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      type="button"
+                      className={`lang-option-card ${
+                        lang.code === language ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setLanguage(lang.code as LanguageCode);
+                        setLanguageOpen(false);
+                      }}
+                    >
+                      <span className="lang-native">{lang.nativeLabel}</span>
+                      <span className="lang-sub">({lang.label})</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
@@ -201,9 +186,10 @@ const Navbar = () => {
           {/* Currency Switcher Dropdown */}
           <div className="currency-menu" ref={currencyRef}>
             <button
+              type="button"
               className="currency-btn"
               onClick={() => {
-                setCurrencyOpen(!currencyOpen);
+                setCurrencyOpen((prev) => !prev);
                 setLanguageOpen(false);
                 setProfileOpen(false);
               }}
@@ -247,6 +233,7 @@ const Navbar = () => {
                       return (
                         <button
                           key={curr}
+                          type="button"
                           className={`currency-option-card ${
                             curr === currency ? "active" : ""
                           }`}
@@ -289,6 +276,7 @@ const Navbar = () => {
 
           {/* Cart Trigger */}
           <button
+            type="button"
             className="cart-link cart-btn"
             onClick={() => setCartOpen(true)}
             aria-label="Open Cart"
@@ -302,9 +290,10 @@ const Navbar = () => {
           {/* Profile Menu Dropdown */}
           <div className="profile-menu" ref={profileRef}>
             <button
+              type="button"
               className="profile-btn"
               onClick={() => {
-                setProfileOpen(!profileOpen);
+                setProfileOpen((prev) => !prev);
                 setCurrencyOpen(false);
                 setLanguageOpen(false);
               }}
@@ -359,15 +348,6 @@ const Navbar = () => {
                     )}
 
                     <Link
-                      to="/profile"
-                      className="profile-item"
-                      onClick={() => setProfileOpen(false)}
-                    >
-                      <FaUser />
-                      <span>{t("myProfile")}</span>
-                    </Link>
-
-                    <Link
                       to="/orders"
                       className="profile-item"
                       onClick={() => setProfileOpen(false)}
@@ -409,6 +389,7 @@ const Navbar = () => {
                     <div className="dropdown-divider"></div>
 
                     <button
+                      type="button"
                       className="logout-dropdown"
                       onClick={() => {
                         setProfileOpen(false);

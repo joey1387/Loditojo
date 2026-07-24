@@ -1,5 +1,5 @@
 import "./Login.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -17,6 +17,7 @@ import {
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -24,27 +25,32 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Check if user was redirected from a protected route
+  const from = location.state?.from?.pathname;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       setLoading(true);
-      const response = await loginUser(email, password);
+      const cleanEmail = email.trim();
+      const response = await loginUser(cleanEmail, password);
+      
       login(response.user, response.accessToken);
       toast.success(response.message || "Logged in successfully!");
 
-      // Role-based post-login routing
+      // Role-based post-login routing with fallback to previous path
       const role = response.user?.role;
       if (role === "admin") {
-        navigate("/admin/dashboard");
+        navigate("/admin/dashboard", { replace: true });
       } else if (role === "seller") {
-        navigate("/seller/dashboard");
+        navigate("/seller/dashboard", { replace: true });
       } else {
-        navigate("/");
+        navigate(from || "/", { replace: true });
       }
     } catch (error: any) {
       toast.error(
-        error?.response?.data?.message || "Login failed"
+        error?.response?.data?.message || "Login failed. Please check your credentials."
       );
     } finally {
       setLoading(false);
@@ -71,6 +77,7 @@ const Login = () => {
             <input
               type="email"
               placeholder="Email Address"
+              aria-label="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -83,6 +90,7 @@ const Login = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
+              aria-label="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -91,7 +99,7 @@ const Login = () => {
             <button
               type="button"
               className="toggle-password"
-              onClick={() => setShowPassword(!showPassword)}
+              onClick={() => setShowPassword((prev) => !prev)}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
@@ -115,7 +123,7 @@ const Login = () => {
           </button>
 
           <p className="switch-auth">
-            Don't have an account?
+            Don't have an account?{" "}
             <Link to="/register">Register</Link>
           </p>
         </form>
