@@ -28,6 +28,42 @@ const AIChat = () => {
     },
   ]);
 
+  // Helper function to resolve the best matching bot response
+  const getBotReply = (userMessageText: string): string => {
+    const lower = userMessageText.toLowerCase().trim();
+
+    // 1. Specific Multi-Word Checks (Priority overrides)
+    if (lower.includes("best iphone") || lower.includes("top iphone")) {
+      return botReplies.best_iphone || botReplies.iphone;
+    }
+    if (lower.includes("best laptop") || lower.includes("top laptop")) {
+      return botReplies.best_laptop || botReplies.laptop;
+    }
+    if (
+      lower.includes("best watch") ||
+      lower.includes("top watch") ||
+      lower.includes("best smartwatch")
+    ) {
+      return botReplies.best_watch || botReplies.smartwatch;
+    }
+
+    // 2. Exact or Partial Keyword Matching
+    for (const keyword of Object.keys(botReplies)) {
+      // Skip internal composite keys containing underscores
+      if (keyword.includes("_")) continue;
+
+      if (lower.includes(keyword)) {
+        return botReplies[keyword];
+      }
+    }
+
+    // 3. Fallback Reply
+    return (
+      botReplies.default ||
+      "Sorry, I couldn't find an answer to that.\n\nPlease contact our customer support team."
+    );
+  };
+
   const SendMessage = (message?: string) => {
     const text = message || input;
 
@@ -38,14 +74,8 @@ const AIChat = () => {
       text,
     };
 
-    const lower = text.toLowerCase();
-    let reply = `Sorry, I couldn't find an answer to that.\n\nPlease contact our customer support team.`;
-
-    Object.keys(botReplies).forEach((keyword) => {
-      if (lower.includes(keyword)) {
-        reply = botReplies[keyword];
-      }
-    });
+    // Determine reply using match logic
+    const reply = getBotReply(text);
 
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
@@ -60,7 +90,7 @@ const AIChat = () => {
           text: reply,
         },
       ]);
-    }, 1000);
+    }, 800);
   };
 
   return (

@@ -1,25 +1,17 @@
-import "./ProductCard.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { AiOutlineHeart, AiFillHeart, AiFillStar } from "react-icons/ai";
+import { FaShoppingCart, FaEye, FaBalanceScale } from "react-icons/fa";
+
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useCompare } from "../../context/CompareContext";
-
-import {
-  AiOutlineHeart,
-  AiFillHeart,
-  AiFillStar,
-} from "react-icons/ai";
-
-import {
-  FaShoppingCart,
-  FaEye,
-  FaBalanceScale,
-} from "react-icons/fa";
-
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useCurrency } from "../../context/CurrencyContext";
 import QuickView from "../QuickView/QuickView";
 import { Product } from "../../types/Product";
+
+import "./ProductCard.css";
 
 type ProductCardProps = Product & {
   brand?: string;
@@ -39,6 +31,7 @@ const ProductCard = (product: ProductCardProps) => {
 
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const {
     addToWishlist,
@@ -80,7 +73,11 @@ const ProductCard = (product: ProductCardProps) => {
                 }
               }}
             >
-              {isInWishlist(id) ? <AiFillHeart className="active-heart" /> : <AiOutlineHeart />}
+              {isInWishlist(id) ? (
+                <AiFillHeart className="active-heart" />
+              ) : (
+                <AiOutlineHeart />
+              )}
             </button>
 
             <button
@@ -123,7 +120,7 @@ const ProductCard = (product: ProductCardProps) => {
             <span>{rating}</span>
           </div>
 
-          <p className="price">₦{price.toLocaleString()}</p>
+          <p className="price">{formatPrice(price)}</p>
 
           <p className={stock > 0 ? "in-stock" : "out-stock"}>
             {stock > 0 ? `${stock} in stock` : "Out of stock"}
@@ -145,7 +142,10 @@ const ProductCard = (product: ProductCardProps) => {
       </div>
 
       {showQuickView && (
-        <QuickView product={product} onClose={() => setShowQuickView(false)} />
+        <QuickView
+          product={product}
+          onClose={() => setShowQuickView(false)}
+        />
       )}
     </>
   );

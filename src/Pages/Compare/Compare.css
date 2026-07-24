@@ -1,7 +1,14 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .compare-page {
   padding: 90px 8%;
   min-height: 100vh;
-  background: #f8f9fc;
+  background: var(--bg, #f8f9fc);
+  width: 100%;
 }
 
 .compare-header {
@@ -14,17 +21,20 @@
 
 .compare-header h1 {
   font-size: 2.2rem;
-  color: #222;
+  color: var(--text, #222222);
+  margin: 0;
+  font-weight: 800;
 }
 
 .compare-header p {
-  color: #666;
+  color: var(--text-muted, #666666);
   margin-top: 8px;
+  margin-bottom: 0;
 }
 
 .clear-btn {
   background: #ef4444;
-  color: white;
+  color: #ffffff;
   border: none;
   padding: 14px 22px;
   border-radius: 10px;
@@ -33,7 +43,7 @@
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  transition: .3s;
+  transition: background 0.3s ease;
 }
 
 .clear-btn:hover {
@@ -41,16 +51,17 @@
 }
 
 .compare-table {
-  background: white;
+  background: var(--card, #ffffff);
   border-radius: 18px;
   overflow-x: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border, #e5e7eb);
 }
 
 .compare-row {
   display: grid;
-  grid-template-columns: 220px repeat(auto-fit, minmax(260px,1fr));
-  border-bottom: 1px solid #ececec;
+  grid-template-columns: 220px repeat(auto-fit, minmax(260px, 1fr));
+  border-bottom: 1px solid var(--border, #ececec);
 }
 
 .compare-row:last-child {
@@ -58,12 +69,12 @@
 }
 
 .compare-title {
-  background: #fafafa;
+  background: var(--bg, #fafafa);
   font-weight: 700;
   padding: 25px;
   display: flex;
   align-items: center;
-  color: #444;
+  color: var(--text, #444444);
 }
 
 .compare-row > div:not(.compare-title) {
@@ -87,7 +98,7 @@
 
 .compare-product h3 {
   font-size: 18px;
-  color: #222;
+  color: var(--text, #222222);
   margin-bottom: 12px;
 }
 
@@ -101,8 +112,8 @@
 
 .compare-cart-btn {
   width: 100%;
-  background: #6c2bd9;
-  color: white;
+  background: var(--primary, #6c2bd9);
+  color: #ffffff;
   border: none;
   padding: 12px;
   border-radius: 10px;
@@ -113,7 +124,7 @@
   gap: 10px;
   font-weight: 600;
   margin-bottom: 12px;
-  transition: .3s;
+  transition: background 0.3s ease;
 }
 
 .compare-cart-btn:hover {
@@ -128,13 +139,13 @@
   padding: 11px;
   border-radius: 10px;
   cursor: pointer;
-  transition: .3s;
+  transition: all 0.3s ease;
   font-weight: 600;
 }
 
 .remove-btn:hover {
   background: #ef4444;
-  color: white;
+  color: #ffffff;
 }
 
 .rating-display {
@@ -159,25 +170,33 @@
 .empty-compare {
   text-align: center;
   padding: 120px 20px;
+  background: var(--card, #ffffff);
+  border-radius: 20px;
+  border: 1px dashed var(--border, #d1d5db);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .empty-compare h1 {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  color: var(--text, #111827);
 }
 
 .empty-compare p {
-  color: #666;
+  color: var(--text-muted, #666666);
   margin-bottom: 30px;
 }
 
 .empty-compare button {
-  background: #6c2bd9;
-  color: white;
+  background: var(--primary, #6c2bd9);
+  color: #ffffff;
   border: none;
   padding: 15px 30px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 700;
+  transition: background 0.2s ease;
 }
 
 .empty-compare button:hover {
@@ -185,46 +204,42 @@
 }
 
 @media (max-width: 992px) {
-
   .compare-header {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .compare-row {
-    grid-template-columns: 170px repeat(auto-fit, minmax(220px,1fr));
+    grid-template-columns: 170px repeat(auto-fit, minmax(220px, 1fr));
   }
 
   .compare-product img {
     width: 130px;
     height: 130px;
   }
-
 }
 
-@media (max-width:768px){
-
-  .compare-page{
-    padding:70px 20px;
+@media (max-width: 768px) {
+  .compare-page {
+    padding: 70px 20px;
   }
 
-  .compare-row{
-    grid-template-columns:150px repeat(auto-fit,minmax(200px,1fr));
+  .compare-row {
+    grid-template-columns: 150px repeat(auto-fit, minmax(200px, 1fr));
   }
 
   .compare-title,
-  .compare-row>div{
-    padding:18px;
-    font-size:14px;
+  .compare-row > div {
+    padding: 18px;
+    font-size: 14px;
   }
 
-  .compare-product img{
-    width:100px;
-    height:100px;
+  .compare-product img {
+    width: 100px;
+    height: 100px;
   }
 
-  .compare-product h3{
-    font-size:15px;
+  .compare-product h3 {
+    font-size: 15px;
   }
-
 }

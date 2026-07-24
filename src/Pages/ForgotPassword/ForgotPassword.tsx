@@ -8,9 +8,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -32,9 +30,7 @@ const ForgotPassword = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to send OTP"
-        );
+        throw new Error(data.message || "Failed to send OTP");
       }
 
       alert(data.message);
@@ -54,46 +50,28 @@ const ForgotPassword = () => {
   return (
     <section className="auth-page">
       <div className="auth-card">
-
         <h1>Forgot Password</h1>
 
-        <p>
-          Enter your email to receive a verification code.
-        </p>
+        <p>Enter your email to receive a verification code.</p>
 
-        <form
-          className="auth-form"
-          onSubmit={handleSubmit}
-        >
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="Email Address"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-          >
-            {loading
-              ? "Sending..."
-              : "Send OTP"}
+          <button type="submit" disabled={loading}>
+            {loading ? "Sending..." : "Send OTP"}
           </button>
 
           <p className="switch-auth">
             Remember your password?
-
-            <Link to="/login">
-              Login
-            </Link>
+            <Link to="/login">Login</Link>
           </p>
-
         </form>
-
       </div>
     </section>
   );

@@ -10,33 +10,38 @@ import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { WishlistProvider } from "./context/WishlistContext";
 import { CompareProvider } from "./context/CompareContext";
-
+import { CurrencyProvider } from "./context/CurrencyContext";
+import { LanguageProvider } from "./context/LanguageContext";
 
 ReactDOM.createRoot(
   document.getElementById("root")!
 ).render(
   <React.StrictMode>
     <BrowserRouter>
-        <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <CompareProvider>
-                <App />
+      <AuthProvider>
+        <LanguageProvider>
+          <CurrencyProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <CompareProvider>
+                  <App />
 
-                <ToastContainer
-                  position="top-right"
-                  autoClose={2500}
-                  hideProgressBar={false}
-                  newestOnTop
-                  closeOnClick
-                  pauseOnHover
-                  draggable
-                  theme="colored"
-                />
-              </CompareProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </AuthProvider>
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={2500}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    pauseOnHover
+                    draggable
+                    theme="colored"
+                  />
+                </CompareProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </CurrencyProvider>
+        </LanguageProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

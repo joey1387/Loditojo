@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { useCurrency } from "../../context/CurrencyContext";
 
 import "./Cart.css";
 
@@ -20,12 +21,14 @@ const Cart = () => {
     decreaseQuantity,
   } = useCart();
 
-  const {
-    wishlist,
-    addToWishlist,
-  } = useWishlist();
+  const { wishlist, addToWishlist } = useWishlist();
+  const { currency, formatPrice } = useCurrency();
 
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+
+  // Currency Check
+  const activeCurrency = String(currency || "NGN").toUpperCase();
+  const isNigeria = activeCurrency === "NGN";
 
   const toggleSelection = (id: number) => {
     setSelectedItems((prev) =>
@@ -36,12 +39,23 @@ const Cart = () => {
   };
 
   const subtotal = cart.reduce(
-    (total, item) =>
-      total + item.price * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0
   );
 
-  const deliveryFee = subtotal > 0 ? 5000 : 0;
+  // Total quantity of all units across all products in the cart
+  const totalItemCount = cart.reduce(
+    (count, item) => count + item.quantity,
+    0
+  );
+
+  // Delivery Calculation Rates (in base currency units)
+  const STANDARD_LOCAL_PER_ITEM_RATE = 5000;
+  const INTERNATIONAL_FLAT_SHIPPING = 15000;
+
+  const deliveryFee = isNigeria
+    ? STANDARD_LOCAL_PER_ITEM_RATE * totalItemCount
+    : INTERNATIONAL_FLAT_SHIPPING;
 
   const total = subtotal + deliveryFee;
 
@@ -49,18 +63,10 @@ const Cart = () => {
     return (
       <div className="empty-cart">
         <AiOutlineShoppingCart size={80} />
-
         <h2>Your Cart is Empty</h2>
-
-        <p>
-          Looks like you haven't added any
-          products yet.
-        </p>
-
+        <p>Looks like you haven't added any products yet.</p>
         <Link to="/shop">
-          <button className="shop-btn">
-            Continue Shopping
-          </button>
+          <button className="shop-btn">Continue Shopping</button>
         </Link>
       </div>
     );
@@ -68,21 +74,13 @@ const Cart = () => {
 
   return (
     <div className="cart-page">
-      <h1 className="cart-title">
-        My Cart ({cart.length})
-      </h1>
+      <h1 className="cart-title">My Cart ({cart.length})</h1>
 
       <div className="cart-container">
-
+        {/* CART ITEMS LIST */}
         <div className="cart-items">
-
           {cart.map((item) => (
-
-            <div
-              className="cart-item"
-              key={item.id}
-            >
-
+            <div className="cart-item" key={item.id}>
               <input
                 type="checkbox"
                 className="cart-checkbox"
@@ -90,137 +88,77 @@ const Cart = () => {
                 onChange={() => toggleSelection(item.id)}
               />
 
-              <img
-                src={item.image}
-                alt={item.name}
-              />
+              <img src={item.image} alt={item.name} />
 
               <div className="cart-details">
-
                 <h3>{item.name}</h3>
-
                 <p>{item.category}</p>
-
-                <h4>
-                  ₦{item.price.toLocaleString()}
-                </h4>
+                <h4>{formatPrice(item.price)}</h4>
 
                 <div className="quantity-controls">
-
-                  <button
-                    onClick={() =>
-                      decreaseQuantity(item.id)
-                    }
-                  >
-                    −
-                  </button>
-
+                  <button onClick={() => decreaseQuantity(item.id)}>−</button>
                   <span>{item.quantity}</span>
-
-                  <button
-                    onClick={() =>
-                      increaseQuantity(item.id)
-                    }
-                  >
-                    +
-                  </button>
-
+                  <button onClick={() => increaseQuantity(item.id)}>+</button>
                 </div>
 
                 <div className="cart-actions">
-
                   <button
                     className="wishlist-btn-cart"
                     onClick={() => addToWishlist(item)}
                   >
-                    {wishlist.some(
-                      (wish) => wish.id === item.id
-                    ) ? (
+                    {wishlist.some((wish) => wish.id === item.id) ? (
                       <AiFillHeart />
                     ) : (
                       <AiOutlineHeart />
                     )}
-
                     <span>
-                      {wishlist.some(
-                        (wish) => wish.id === item.id
-                      )
+                      {wishlist.some((wish) => wish.id === item.id)
                         ? "Saved"
                         : "Add to Wishlist"}
                     </span>
-
                   </button>
 
                   <button
                     className="delete-btn-cart"
-                    onClick={() =>
-                      removeFromCart(item.id)
-                    }
+                    onClick={() => removeFromCart(item.id)}
                   >
                     <AiOutlineDelete />
-
                     <span>Delete</span>
-
                   </button>
-
                 </div>
-
               </div>
-
             </div>
-
           ))}
-
         </div>
 
+        {/* ORDER SUMMARY */}
         <div className="cart-summary">
-
           <h2>Order Summary</h2>
 
           <div className="summary-row">
-
             <span>Subtotal</span>
-
-            <span>
-              ₦{subtotal.toLocaleString()}
-            </span>
-
+            <span>{formatPrice(subtotal)}</span>
           </div>
 
-          <div className="summary-row">
-
-            <span>Delivery</span>
-
+          <div className="summary-row delivery-row">
             <span>
-              ₦{deliveryFee.toLocaleString()}
+              {isNigeria ? "Estimated Delivery" : "International Flat Shipping"}
             </span>
-
+            <span>{formatPrice(deliveryFee)}</span>
           </div>
 
           <hr />
 
           <div className="summary-total">
-
             <span>Total</span>
-
-            <span>
-              ₦{total.toLocaleString()}
-            </span>
-
+            <span>{formatPrice(total)}</span>
           </div>
 
           <Link to="/checkout">
-
-            <button className="checkout-btn">
-              Proceed to Checkout
-            </button>
-
+            <button className="checkout-btn">Proceed to Checkout</button>
           </Link>
-
         </div>
-
       </div>
-
     </div>
   );
 };

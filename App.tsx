@@ -1,6 +1,6 @@
-import React from 'react'
-import { Routes, Route} from 'react-router-dom'
-import './App.css'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import './App.css';
 import Home from './src/Pages/Homepage/Home';
 import Shop from './src/Pages/Shop/Shop';
 import Cart from './src/Pages/Cart/Cart';
@@ -8,7 +8,7 @@ import Checkout from './src/Pages/Checkout/Checkout';
 import Login from './src/Pages/Login/Login';
 import Register from './src/Pages/Register/Register';
 import NotFound from './src/Pages/NotFound/NotFound';
-import Navbar  from './src/Components/Navbar/Navbar';  
+import Navbar from './src/Components/Navbar/Navbar';  
 import ProductDetails from "./src/Pages/ProductDetails/ProductDetails";
 import ProtectedRoute from "./src/Components/ProtectedRoute/ProtectedRoute"; 
 import Success from "./src/Pages/Success/Success";
@@ -28,6 +28,12 @@ import Profile from "./src/Pages/Profile/Profile";
 import Inbox from "./src/Pages/Inbox/Inbox";
 import Settings from "./src/Pages/Settings/Settings";
 import EditProfile from "./src/Pages/EditProfile/EditProfile";
+import BecomeSeller from './src/Pages/BecomeSeller/BecomeSeller';
+import { DataPolicy } from "./src/Pages/DataPolicy/DataPolicy";
+
+// Dashboards
+import AdminDashboard from "./src/Pages/AdminDashboard/AdminDashboard";
+import SellerDashboard from "./src/Pages/SellerDashboard/SellerDashboard";
 
 function App() {
   return (
@@ -35,86 +41,97 @@ function App() {
       <Navbar />
 
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<Shop />} />
-        <Route path="/product/:id"element={<ProductDetails />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
-       <Route
-  path="/profile"
-  element={
-    <ProtectedRoute>
-      <Profile />
-    </ProtectedRoute>
-  }
-/>
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/track-order/:id" element={<OrderTracking />} />
+        <Route path="/payment/verify" element={<PaymentVerify />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/become-seller" element={<BecomeSeller />} />
+        <Route path="/data-policy" element={<DataPolicy />} />
 
-<Route
-  path="/inbox"
-  element={
-    <ProtectedRoute>
-      <Inbox />
-    </ProtectedRoute>
-  }
-/>
-
-<Route
-  path="/settings"
-  element={
-    <ProtectedRoute>
-      <Settings />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/edit-profile"
-  element={
-    <ProtectedRoute>
-      <EditProfile />
-    </ProtectedRoute>
-  }
-/>
-       <Route path="/checkout"element={
-    <ProtectedRoute>
-      <Checkout />
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/compare"
-  element={<Compare />}
-/>
-<Route
-  path="/track-order/:id"
-  element={<OrderTracking />}
-/>
-<Route
-  path="/payment/verify"
-  element={<PaymentVerify />}
-/>
-
-<Route
-  path="/orders"
-  element={
-    <ProtectedRoute>
-      <OrderHistory />
-    </ProtectedRoute>
-  }
-/>
-
+        {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
         <Route path="/verify-otp" element={<VerifyOTP />} />
-
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/wishlist" element={<Wishlist />} />
+
+        {/* Protected User Routes */}
         <Route
-   path="/wishlist"
-   element={<Wishlist />}
-/>
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/inbox"
+          element={
+            <ProtectedRoute>
+              <Inbox />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <ProtectedRoute>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Dashboards (Wildcard matching for sub-paths) */}
+        <Route
+          path="/seller/*"
+          element={
+            <ProtectedRoute>
+              <SellerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all 404 Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 

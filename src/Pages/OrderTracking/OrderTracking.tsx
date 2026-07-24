@@ -1,274 +1,170 @@
 import "./OrderTracking.css";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
-  FaBoxOpen,
+  FaBox,
   FaCheckCircle,
   FaTruck,
-  FaMapMarkerAlt,
+  FaHome,
+  FaArrowLeft,
 } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { getOrderById } from "../../api/orderApi";
+
+interface TrackingStep {
+  label: string;
+  date?: string;
+  completed: boolean;
+  current: boolean;
+  icon: JSX.Element;
+}
 
 const OrderTracking = () => {
+  const { orderId } = useParams<{ orderId: string }>();
+  const navigate = useNavigate();
 
-  const { id } = useParams();
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [order, setOrder] =
-    useState<any>(null);
+  const [order, setOrder] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-
-    const fetchOrder = async () => {
+    const fetchOrderDetails = async () => {
+      if (!orderId) return;
 
       try {
-
-        const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/orders/${id}`,
-          {
-            credentials: "include",
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(
-            "Unable to fetch order."
-          );
-        }
-
-        const data =
-          await response.json();
-
-        setOrder(
-          data.order || data
-        );
-
-      } catch (error) {
-
-        console.error(error);
-
+        const data = await getOrderById(orderId);
+        setOrder(data.order ?? data);
+      } catch (err: any) {
+        console.error(err);
+        setError("Unable to load tracking details for this order.");
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
-    fetchOrder();
-
-  }, [id]);
+    fetchOrderDetails();
+  }, [orderId]);
 
   if (loading) {
-
     return (
-      <div className="loading-page">
-        Loading order...
-      </div>
+      <section className="order-tracking-page loading-state">
+        <div className="spinner"></div>
+        <h2>Loading tracking status...</h2>
+      </section>
     );
-
   }
 
-  if (!order) {
-
+  if (error || !order) {
     return (
-      <div className="loading-page">
-        Order not found.
-      </div>
+      <section className="order-tracking-page">
+        <button className="back-btn" onClick={() => navigate("/order-history")}>
+          <FaArrowLeft /> Back to Orders
+        </button>
+        <div className="error-card">
+          <h2>Order Not Found</h2>
+          <p>{error || "We couldn't locate the order details you requested."}</p>
+        </div>
+      </section>
     );
-
   }
 
-  const progress =
-    order.status === "Pending"
-      ? 20
-      : order.status === "Processing"
-      ? 45
-      : order.status === "Out for Delivery"
-      ? 75
-      : order.status === "Delivered"
-      ? 100
-      : 0;
+  const status = (order.status || "Processing").toLowerCase();
+
+  const steps: TrackingStep[] = [
+    {
+      label: "Order Placed",
+      date: order.createdAt
+        ? new Date(order.createdAt).toLocaleDateString()
+        : "Confirmed",
+      completed: true,
+      current: status === "pending" || status === "placed",
+      icon: <FaBox />,
+    },
+    {
+      label: "Processing",
+      date: status !== "pending" ? "In progress" : "Pending",
+      completed: ["processing", "shipped", "out for delivery", "delivered"].includes(status),
+      current: status === "processing",
+      icon: <FaCheckCircle />,
+    },
+    {
+      label: "Out for Delivery",
+      date: ["out for delivery", "delivered"].includes(status) ? "On the way" : "Pending",
+      completed: ["out for delivery", "delivered"].includes(status),
+      current: status === "out for delivery" || status === "shipped",
+      icon: <FaTruck />,
+    },
+    {
+      label: "Delivered",
+      date: status === "delivered" ? "Delivered" : "Expected soon",
+      completed: status === "delivered",
+      current: status === "delivered",
+      icon: <FaHome />,
+    },
+  ];
 
   return (
+    <section className="order-tracking-page">
+      <button className="back-btn" onClick={() => navigate("/order-history")}>
+        <FaArrowLeft /> Back to Orders
+      </button>
 
-    <section className="order-page">
-
-      <div className="order-header">
-
-        <h1>Track Your Order</h1>
-
-        <p>
-
-          Order Number:
-
-          <strong>
-            {" "}
-            {order.orderNumber ||
-              order._id}
-          </strong>
-
-        </p>
-
-      </div>
-
-      <div className="tracking-card">
-
-        <div className="tracking-top">
-
+      <div className="track-card">
+        <div className="track-header">
           <div>
-
-            <h3>Current Status</h3>
-
-            <span className="status">
-              {order.status}
-            </span>
-
+            <h1>Order Tracking</h1>
+            <p className="order-id-label">
+              Order #{(order._id || order.id || orderId)?.slice(-8)}
+            </p>
           </div>
-
-          <div>
-
-            <h3>Payment</h3>
-
-            <span className="paid">
-              {order.paymentStatus}
-            </span>
-
-          </div>
-
+          <span className={`status-badge ${status.replace(/\s+/g, "")}`}>
+            {order.status || "Processing"}
+          </span>
         </div>
 
-        <div className="progress">
-
-          <div
-            className="progress-fill"
-            style={{
-              width: `${progress}%`,
-            }}
-          />
-
-        </div>
-
-        <div className="timeline">
-                    <div
-            className={
-              progress >= 20
-                ? "active"
-                : ""
-            }
-          >
-            <FaCheckCircle />
-            <p>Order Placed</p>
-          </div>
-
-          <div
-            className={
-              progress >= 45
-                ? "active"
-                : ""
-            }
-          >
-            <FaBoxOpen />
-            <p>Processing</p>
-          </div>
-
-          <div
-            className={
-              progress >= 75
-                ? "active"
-                : ""
-            }
-          >
-            <FaTruck />
-            <p>Out for Delivery</p>
-          </div>
-
-          <div
-            className={
-              progress === 100
-                ? "active"
-                : ""
-            }
-          >
-            <FaMapMarkerAlt />
-            <p>Delivered</p>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div className="delivery-card">
-
-        <h2>Delivery Details</h2>
-
-        <p>
-          <strong>Customer:</strong>{" "}
-          {order.user?.name ||
-            order.customer?.name ||
-            "N/A"}
-        </p>
-
-        <p>
-          <strong>Address:</strong>{" "}
-          {order.shippingAddress
-            ? `${order.shippingAddress.street}, ${order.shippingAddress.city}, ${order.shippingAddress.state}`
-            : "No address"}
-        </p>
-
-        <p>
-          <strong>
-            Estimated Arrival:
-          </strong>{" "}
-          {order.estimatedDelivery ||
-            "To be communicated"}
-        </p>
-
-      </div>
-
-      <div className="items-card">
-
-        <h2>Ordered Items</h2>
-
-        {order.items?.map(
-          (item: any) => (
-
+        {/* Timeline */}
+        <div className="tracking-timeline">
+          {steps.map((step, index) => (
             <div
-              key={
-                item._id ||
-                item.product
-              }
-              className="item"
+              key={index}
+              className={`timeline-step ${step.completed ? "completed" : ""} ${
+                step.current ? "active" : ""
+              }`}
             >
-
-              <span>
-                {item.name ||
-                  item.product
-                    ?.name}
-              </span>
-
-              <span>
-                x{item.quantity}
-              </span>
-
-              <strong>
-                ₦
-                {(
-                  item.price *
-                  item.quantity
-                ).toLocaleString()}
-              </strong>
-
+              <div className="step-icon-wrapper">
+                <div className="step-icon">{step.icon}</div>
+                {index < steps.length - 1 && <div className="step-line"></div>}
+              </div>
+              <div className="step-content">
+                <h3>{step.label}</h3>
+                <small>{step.date}</small>
+              </div>
             </div>
+          ))}
+        </div>
 
-          )
-        )}
-
+        {/* Order Items Summary */}
+        <div className="order-summary-section">
+          <h2>Items in this Shipment</h2>
+          <div className="summary-items">
+            {(order.items || order.products || []).map((item: any, idx: number) => (
+              <div className="summary-item" key={idx}>
+                <img
+                  src={item.image || item.product?.image || "/placeholder.jpg"}
+                  alt={item.name || item.product?.name || "Product"}
+                />
+                <div className="item-details">
+                  <h4>{item.name || item.product?.name}</h4>
+                  <p>Qty: {item.quantity || 1}</p>
+                </div>
+                <div className="item-price">
+                  ₦{Number(item.price || item.product?.price || 0).toLocaleString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-
     </section>
-
   );
 };
 

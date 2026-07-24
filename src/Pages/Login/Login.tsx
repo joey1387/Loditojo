@@ -31,8 +31,17 @@ const Login = () => {
       setLoading(true);
       const response = await loginUser(email, password);
       login(response.user, response.accessToken);
-      toast.success(response.message);
-      navigate("/");
+      toast.success(response.message || "Logged in successfully!");
+
+      // Role-based post-login routing
+      const role = response.user?.role;
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (role === "seller") {
+        navigate("/seller/dashboard");
+      } else {
+        navigate("/");
+      }
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message || "Login failed"

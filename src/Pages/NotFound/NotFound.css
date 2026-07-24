@@ -1,0 +1,71 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.not-found-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--bg, #fafafa);
+}
+
+.not-found-card {
+  text-align: center;
+  background: var(--card, #ffffff);
+  padding: 60px 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border, #e5e7eb);
+  max-width: 500px;
+  width: 100%;
+}
+
+.not-found-icon {
+  font-size: 3.5rem;
+  color: #f59e0b;
+  margin-bottom: 16px;
+}
+
+.not-found-card h1 {
+  font-size: 5rem;
+  margin: 0;
+  color: var(--primary, #6c2bd9);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.not-found-card h2 {
+  font-size: 1.8rem;
+  margin: 10px 0 16px 0;
+  color: var(--text, #111827);
+}
+
+.not-found-card p {
+  color: var(--text-muted, #6b7280);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.not-found-card button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--primary, #6c2bd9);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.not-found-card button:hover {
+  background: #5820b5;
+  transform: translateY(-2px);
+}

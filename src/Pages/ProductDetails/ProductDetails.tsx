@@ -2,6 +2,7 @@ import "./ProductDetails.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { AiFillStar } from "react-icons/ai";
 import { useCart } from "../../context/CartContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { useEffect, useState } from "react";
 import ProductCard from "../../Components/ProductCard/ProductCard";
 import { toast } from "react-toastify";
@@ -11,7 +12,7 @@ import {
   getRecentlyViewed,
 } from "../../utils/recentlyViewed";
 
-import { getReviews, createReview } from "../../utils/reviewStorage";
+import { reviewService } from "../../services/api";
 import {
   getProductById,
   getRelatedProducts,
@@ -23,6 +24,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<Product | null>(null);
@@ -45,7 +47,7 @@ const ProductDetails = () => {
         const data = await getProductById(id);
 
         const formatted: Product = {
-          id: Number(data._id) || data.id,
+          id: data._id || data.id,
           name: data.name,
           category: data.category?.name || data.category || "",
           price: data.basePrice || data.price,
@@ -64,17 +66,19 @@ const ProductDetails = () => {
 
         saveRecentlyViewed(String(formatted.id));
 
+        // Fetch Live Reviews from Backend API (/api/reviews/product/:productId)
         try {
-          const reviewData = await getReviews(formatted.id);
-          setReviews(reviewData.reviews || reviewData);
-        } catch {
+          const reviewData = await reviewService.getProductReviews(String(formatted.id));
+          setReviews(reviewData.reviews || reviewData || []);
+        } catch (revErr) {
+          console.error("Failed to load backend reviews:", revErr);
           setReviews(formatted.reviews || []);
         }
 
         const related = await getRelatedProducts(id);
 
         const formattedRelated = related.map((item: any) => ({
-          id: Number(item._id) || item.id,
+          id: item._id || item.id,
           name: item.name,
           category: item.category?.name || item.category || "",
           price: item.basePrice || item.price,
@@ -132,16 +136,25 @@ const ProductDetails = () => {
     }
 
     try {
-      await createReview(product.id, reviewRating, reviewComment, reviewName);
-      const reviewData = await getReviews(product.id);
-      setReviews(reviewData.reviews || reviewData);
+      // Post Review to API (/api/reviews/product/:productId)
+      await reviewService.addReview(String(product.id), {
+        name: reviewName,
+        rating: reviewRating,
+        comment: reviewComment,
+      });
+
+      // Refetch updated reviews list
+      const reviewData = await reviewService.getProductReviews(String(product.id));
+      setReviews(reviewData.reviews || reviewData || []);
+
       setReviewComment("");
       setReviewName("");
       setReviewRating(5);
-      toast.success("Review submitted successfully.");
-    } catch (error) {
+      toast.success("Review submitted successfully!");
+    } catch (error: any) {
       console.error(error);
-      toast.error("Unable to submit review.");
+      const message = error.response?.data?.message || "Unable to submit review.";
+      toast.error(message);
     }
   };
 
@@ -184,7 +197,7 @@ const ProductDetails = () => {
             <small>({reviews.length} reviews)</small>
           </div>
 
-          <h2>₦{product.price.toLocaleString()}</h2>
+          <h2>{formatPrice(product.price)}</h2>
 
           <p className="description-text">{product.description}</p>
 
@@ -295,13 +308,17 @@ const ProductDetails = () => {
         <div className="reviews-list">
           {reviews.length > 0 ? (
             reviews.map((review, index) => (
-              <div key={review.id || index} className="review-card">
-                <h4>{review.name || "Anonymous User"}</h4>
+              <div key={review._id || review.id || index} className="review-card">
+                <h4>{review.name || review.user?.name || "Anonymous User"}</h4>
                 <div className="review-rating">
                   {"★".repeat(review.rating || 5)}
                 </div>
                 <p>{review.comment}</p>
-                <small>{review.date || "Recently"}</small>
+                <small>
+                  {review.createdAt
+                    ? new Date(review.createdAt).toLocaleDateString()
+                    : review.date || "Recently"}
+                </small>
               </div>
             ))
           ) : (

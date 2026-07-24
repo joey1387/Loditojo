@@ -26,16 +26,16 @@ const EditProfile = () => {
         );
 
         const data = await response.json();
-
         const user = data.user ?? data;
 
         setFormData({
           name: user.name || "",
           phone: user.phone || "",
           gender: user.gender || "",
-          address: user.address || "",
+          address: typeof user.address === "string" 
+            ? user.address 
+            : user.address ? `${user.address.street || ""}, ${user.address.city || ""}, ${user.address.state || ""}, ${user.address.country || ""}`.replace(/^, |, $/g, "") : "",
         });
-
       } catch (error) {
         console.error(error);
       } finally {
@@ -47,9 +47,7 @@ const EditProfile = () => {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({
       ...formData,
@@ -57,9 +55,7 @@ const EditProfile = () => {
     });
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -71,8 +67,7 @@ const EditProfile = () => {
           method: "PATCH",
           credentials: "include",
           headers: {
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
         }
@@ -85,9 +80,7 @@ const EditProfile = () => {
       }
 
       alert("Profile updated successfully");
-
       navigate("/profile");
-
     } catch (error: any) {
       alert(error.message);
     } finally {
@@ -96,25 +89,16 @@ const EditProfile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="loading-page">
-        Loading...
-      </div>
-    );
+    return <div className="loading-page">Loading...</div>;
   }
 
   return (
     <section className="edit-profile-page">
-
       <div className="edit-profile-card">
-
         <h1>Edit Profile</h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="edit-profile-form"
-        >
-                    <input
+        <form onSubmit={handleSubmit} className="edit-profile-form">
+          <input
             type="text"
             name="name"
             placeholder="Full Name"
@@ -136,21 +120,10 @@ const EditProfile = () => {
             value={formData.gender}
             onChange={handleChange}
           >
-            <option value="">
-              Select Gender
-            </option>
-
-            <option value="Male">
-              Male
-            </option>
-
-            <option value="Female">
-              Female
-            </option>
-
-            <option value="Other">
-              Other
-            </option>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
 
           <input
@@ -162,13 +135,10 @@ const EditProfile = () => {
           />
 
           <div className="edit-actions">
-
             <button
               type="button"
               className="cancel-btn"
-              onClick={() =>
-                navigate("/profile")
-              }
+              onClick={() => navigate("/profile")}
             >
               Cancel
             </button>
@@ -178,17 +148,11 @@ const EditProfile = () => {
               className="save-btn"
               disabled={saving}
             >
-              {saving
-                ? "Saving..."
-                : "Save Changes"}
+              {saving ? "Saving..." : "Save Changes"}
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </section>
   );
 };

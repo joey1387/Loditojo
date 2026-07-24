@@ -1,6 +1,7 @@
 import "./MiniCart.css";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
@@ -10,13 +11,9 @@ type Props = {
 };
 
 const MiniCart = ({ open, onClose }: Props) => {
-  const {
-    cart,
-    removeFromCart,
-  } = useCart();
-
+  const { cart, removeFromCart } = useCart();
   const { isLoggedIn } = useAuth();
-
+  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
 
   const total = cart.reduce(
@@ -34,23 +31,15 @@ const MiniCart = ({ open, onClose }: Props) => {
       className={`mini-cart-overlay ${open ? "show" : ""}`}
       onClick={onClose}
     >
-      <div
-        className="mini-cart"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="mini-cart" onClick={(e) => e.stopPropagation()}>
         <div className="mini-cart-header">
           <h2>Your Cart ({totalItems})</h2>
-
-          <FaTimes
-            className="close-cart"
-            onClick={onClose}
-          />
+          <FaTimes className="close-cart" onClick={onClose} />
         </div>
 
         {cart.length === 0 ? (
           <div className="mini-cart-empty">
             <p>Your cart is empty.</p>
-
             <button
               onClick={() => {
                 navigate("/shop");
@@ -64,43 +53,40 @@ const MiniCart = ({ open, onClose }: Props) => {
           <>
             <div className="mini-cart-body">
               {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="mini-cart-item"
-                >
+                <div key={item.id} className="mini-cart-item">
                   <img
                     src={item.image}
                     alt={item.name}
                     onError={(e) => {
-                      e.currentTarget.src =
-                        "/placeholder.png";
+                      e.currentTarget.src = "/placeholder.png";
                     }}
                   />
 
                   <div className="mini-cart-details">
                     <h4>{item.name}</h4>
-
-                    <p>
-                      ₦
-                      {item.price.toLocaleString()}
-                    </p>
-
-                    <small>
-                      Qty: {item.quantity}
-                    </small>
+                    <p>{formatPrice(item.price)}</p>
+                    <small>Qty: {item.quantity}</small>
                   </div>
 
+                  <button
+                    className="remove-mini-item"
+                    onClick={() => removeFromCart(item.id)}
+                    title="Remove item"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               ))}
             </div>
 
             <div className="mini-cart-footer">
-              <h3>
-                Total: ₦
-                {total.toLocaleString()}
-              </h3>
+              <div className="mini-cart-subtotal">
+                <span>Subtotal:</span>
+                <strong>{formatPrice(total)}</strong>
+              </div>
 
               <button
+                className="view-cart-btn"
                 onClick={() => {
                   navigate("/cart");
                   onClose();
@@ -110,13 +96,13 @@ const MiniCart = ({ open, onClose }: Props) => {
               </button>
 
               <button
+                className="checkout-mini-btn"
                 onClick={() => {
                   if (!isLoggedIn) {
                     navigate("/login");
                   } else {
                     navigate("/checkout");
                   }
-
                   onClose();
                 }}
               >

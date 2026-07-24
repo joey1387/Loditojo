@@ -1,21 +1,46 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import "./Shop.css";
 
 import ProductCard from "../../Components/ProductCard/ProductCard";
 import SearchBar from "../../Components/SearchBar/SearchBar";
 import FilterBar from "../../Components/FilterBar/FilterBar";
 import { getAllProducts } from "../../api/productApi";
+import  api  from "../../services/api";
+
+interface Category {
+  _id: string;
+  name: string;
+}
 
 const Shop = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<any[]>([]);
+  const [categoriesList, setCategoriesList] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState("");
+  // Initialize search state from URL query parameter (e.g. /shop?search=iphone)
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState("All");
   const [sortBy, setSortBy] = useState("default");
 
   const [brand, setBrand] = useState("All");
   const [stockOnly, setStockOnly] = useState(false);
+
+  // Fetch Backend Categories dynamically
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get("/categories");
+        const categoryNames = res.data.map((cat: Category) => cat.name);
+        setCategoriesList(categoryNames);
+      } catch (err) {
+        console.error("Failed to load categories from API:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const highestPrice = useMemo(() => {
     return products.length
@@ -28,6 +53,25 @@ const Shop = () => {
   const PRODUCTS_PER_PAGE = 12;
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Sync state if URL changes directly
+  useEffect(() => {
+    const urlQuery = searchParams.get("search") || "";
+    setSearch(urlQuery);
+  }, [searchParams]);
+
+  // Handler to update both state and URL when typing/clearing search
+  const handleSearchChange = (value: string | ((prev: string) => string)) => {
+    const nextSearch = typeof value === "function" ? value(search) : value;
+    setSearch(nextSearch);
+
+    if (nextSearch.trim()) {
+      setSearchParams({ search: nextSearch }, { replace: true });
+    } else {
+      searchParams.delete("search");
+      setSearchParams(searchParams, { replace: true });
+    }
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -37,12 +81,12 @@ const Shop = () => {
           id: product._id,
           name: product.name,
           description: product.description,
-          category: product.category?.name || "",
+          category: product.category?.name || "Uncategorized",
           brand: product.brand || "Unknown",
-          price: product.basePrice,
+          price: product.basePrice || product.price || 0,
           rating: product.ratings?.average || 0,
-          stock: product.stock,
-          featured: product.isFeatured,
+          stock: product.stock || 0,
+          featured: product.isFeatured || false,
           image: product.images?.[0] || "",
           images: product.images || [],
           specifications: product.specs || {},
@@ -51,7 +95,7 @@ const Shop = () => {
 
         setProducts(formattedProducts);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
@@ -68,17 +112,21 @@ const Shop = () => {
     setCurrentPage(1);
   }, [search, category, brand, stockOnly, maxPrice, sortBy]);
 
-  const categories = [
-    ...new Set(products.map((product) => product.category).filter(Boolean)),
-  ];
+  // Merge backend categories with derived product categories for completeness
+  const categories = useMemo(() => {
+    const derived = products.map((p) => p.category).filter(Boolean);
+    return [...new Set([...categoriesList, ...derived])];
+  }, [categoriesList, products]);
 
-  const brands = [
-    "All",
-    ...new Set(products.map((product) => product.brand).filter(Boolean)),
-  ];
+  const brands = useMemo(() => {
+    return [
+      "All",
+      ...new Set(products.map((p) => p.brand).filter(Boolean)),
+    ];
+  }, [products]);
 
   const resetAllFilters = () => {
-    setSearch("");
+    handleSearchChange("");
     setCategory("All");
     setBrand("All");
     setStockOnly(false);
@@ -154,7 +202,7 @@ const Shop = () => {
       <div className="shop-controls">
         <SearchBar
           search={search}
-          setSearch={setSearch}
+          setSearch={handleSearchChange}
           products={products}
         />
 

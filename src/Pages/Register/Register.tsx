@@ -13,15 +13,8 @@ const Register = () => {
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [street, setStreet] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [country, setCountry] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -42,17 +35,11 @@ const Register = () => {
         name: fullName,
         email,
         password,
-        phone,
-        address: {
-          street,
-          city,
-          state,
-          country,
-        },
       });
 
-      toast.success(response.message || "Registration successful");
-      navigate("/login");
+      toast.success(response.message || "Registration successful! Verification code sent.");
+      // Redirect to OTP verification with email state
+      navigate("/verify-otp", { state: { email } });
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message || "Registration failed"
@@ -66,7 +53,7 @@ const Register = () => {
     <section className="auth-page">
       <div className="auth-card">
         <h1>Create Account</h1>
-        <p>Join Loditojo Gadgets today.</p>
+        <p>Join Loditojo Gadgets today in seconds.</p>
 
         <form className="auth-form" autoComplete="off" onSubmit={handleSubmit}>
           <input
@@ -83,13 +70,6 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-          />
-
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
           />
 
           {/* Password */}
@@ -138,49 +118,9 @@ const Register = () => {
             </button>
           </div>
 
-          <h3>Delivery Address</h3>
-
-          <input
-            type="text"
-            placeholder="Street"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-            required
-          />
-
-          <div className="address-row">
-            <input
-              type="text"
-              placeholder="City"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-            />
-            <input
-              type="text"
-              placeholder="State"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              required
-            />
-          </div>
-
-          <input
-            type="text"
-            placeholder="Country"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            required
-          />
-
           <label className="checkbox">
             <input type="checkbox" required />
-            I agree to the Terms & Conditions
-          </label>
-
-          <label className="checkbox">
-            <input type="checkbox" />
-            Send me exclusive offers and updates
+            I agree to the <Link to="/privacy-policy" target="_blank">Privacy Policy</Link> & Terms
           </label>
 
           <button type="submit" disabled={loading}>
@@ -188,8 +128,7 @@ const Register = () => {
           </button>
 
           <p className="switch-auth">
-            Already have an account?
-            <Link to="/login">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
         </form>
       </div>

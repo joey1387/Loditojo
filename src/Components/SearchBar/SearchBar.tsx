@@ -6,7 +6,7 @@ import { Product } from "../../types/Product";
 
 type Props = {
   search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  setSearch: React.Dispatch<React.SetStateAction<string>> | ((val: any) => void);
   products?: Product[];
 };
 
@@ -20,6 +20,13 @@ const SearchBar = ({ search, setSearch, products = [] }: Props) => {
     )
     .slice(0, 5);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && search.trim()) {
+      setShowSuggestions(false);
+      navigate(`/shop?search=${encodeURIComponent(search.trim())}`);
+    }
+  };
+
   return (
     <div className="search-bar">
       <FaSearch className="search-icon" />
@@ -32,6 +39,7 @@ const SearchBar = ({ search, setSearch, products = [] }: Props) => {
           setSearch(e.target.value);
           setShowSuggestions(true);
         }}
+        onKeyDown={handleKeyDown}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
         onFocus={() => {
           if (search) setShowSuggestions(true);

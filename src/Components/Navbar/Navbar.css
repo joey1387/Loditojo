@@ -5,7 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 6%;
+  padding:14px 4% 14px 2%; /* Added slightly more vertical padding */
   background: var(--card, #ffffff);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -14,21 +14,43 @@
   z-index: 999;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   transition: padding 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  gap: 24px; /* Increased overall gap from 16px */
 }
 
 /* ==========================================================================
-   BRAND LOGO
+   BRAND LOGO & HAMBURGER MENU TOGGLE
    ========================================================================== */
+.menu-icon {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text, #1f2937);
+  padding: 6px;
+  margin-right: -8px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.menu-icon:hover {
+  background: var(--bg, #f3f4f6);
+  color: var(--primary, #6c2bd9);
+}
+
 .logo {
   display: flex;
   align-items: center;
   text-decoration: none;
-  z-index: 1001;
+  flex-shrink: 0;
+  margin-right: auto; /* Pushes everything else in the navbar away to the right */
+  margin-left: -8px;   /* Pulls the logo further to the left edge */
 }
 
 .logo img {
-  width: 140px;
-  max-height: 42px;
+  width: 130px;
+  max-height: 40px;
   height: auto;
   display: block;
   object-fit: contain;
@@ -40,22 +62,74 @@
 }
 
 /* ==========================================================================
+   NAVBAR SEARCH FORM
+   ========================================================================== */
+.nav-search-form {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 380px; /* Reduced slightly to give action controls breathing space */
+  position: relative;
+}
+
+.nav-search-form input {
+  width: 100%;
+  padding: 9px 42px 9px 16px;
+  border: 1.5px solid var(--border, #e5e7eb);
+  border-radius: 24px;
+  background-color: var(--bg, #f8fafc);
+  font-size: 14px;
+  color: var(--text, #111827);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.nav-search-form input:focus {
+  background-color: #ffffff;
+  border-color: var(--primary, #6c2bd9);
+  box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.12);
+}
+
+.nav-search-form button {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-search-form button:hover {
+  color: var(--primary, #6c2bd9);
+  background-color: rgba(108, 43, 217, 0.08);
+}
+
+/* ==========================================================================
    DESKTOP NAVIGATION LINKS
    ========================================================================== */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 28px; /* Roomier navigation links */
 }
 
 .nav-links a {
   text-decoration: none;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text, #1f2937);
   transition: color 0.25s ease;
   position: relative;
   padding: 4px 0;
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a:hover,
@@ -80,22 +154,195 @@
   width: 100%;
 }
 
-.mobile-auth-actions {
-  display: none;
-}
-
 /* ==========================================================================
-   ACTION UTILITIES & BUTTONS
+   ACTION UTILITIES & SPACED OUT CONTROLS
    ========================================================================== */
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px; /* Unchokes icons and selectors */
+  flex-shrink: 0;
 }
 
+/* Common Search Input inside Dropdowns */
+.dropdown-search-box {
+  margin-bottom: 10px;
+}
+
+.dropdown-search-box input {
+  width: 100%;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  font-size: 12.5px;
+  outline: none;
+  background: var(--bg, #f9fafb);
+  box-sizing: border-box;
+}
+
+.dropdown-search-box input:focus {
+  border-color: var(--primary, #6c2bd9);
+  background: #ffffff;
+}
+
+/* ==========================================================================
+   CURRENCY & LANGUAGE SWITCHER STYLES
+   ========================================================================== */
+.currency-menu,
+.language-menu {
+  position: relative;
+}
+
+.currency-btn {
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg, #f8fafc);
+  cursor: pointer;
+  color: var(--text, #1f2937);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.currency-btn:hover {
+  background: rgba(108, 43, 217, 0.08);
+  border-color: var(--primary, #6c2bd9);
+  color: var(--primary, #6c2bd9);
+}
+
+.currency-btn-code {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.currency-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  width: 300px;
+  background: var(--card, #ffffff);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  padding: 14px;
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  animation: dropdownFadeIn 0.2s ease-out;
+}
+
+.currency-dropdown-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 2px;
+}
+
+/* Currency Grid */
+.currency-options-grid-30 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 230px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.currency-option-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg, #f9fafb);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.currency-option-card:hover {
+  border-color: var(--primary, #6c2bd9);
+  background: rgba(108, 43, 217, 0.05);
+}
+
+.currency-option-card.active {
+  background: var(--primary, #6c2bd9);
+  color: #ffffff;
+  border-color: var(--primary, #6c2bd9);
+}
+
+.currency-symbol {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.currency-code-text {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.currency-country {
+  font-size: 10.5px;
+  opacity: 0.75;
+}
+
+/* Language Dropdown Custom Grid & Styles */
+.lang-dropdown-large {
+  width: 280px;
+}
+
+.language-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.lang-option-card {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg, #f9fafb);
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.lang-option-card:hover {
+  border-color: var(--primary, #6c2bd9);
+  background: rgba(108, 43, 217, 0.05);
+}
+
+.lang-option-card.active {
+  background: var(--primary, #6c2bd9);
+  color: #ffffff;
+  border-color: var(--primary, #6c2bd9);
+}
+
+.lang-native {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lang-sub {
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   CART & ACTION BUTTONS
+   ========================================================================== */
 .cart-link {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background: var(--bg, #f3f4f6);
@@ -121,8 +368,8 @@
 
 .cart-count {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -3px;
+  right: -3px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;
@@ -137,77 +384,39 @@
   box-shadow: 0 2px 6px rgba(22, 163, 74, 0.4);
 }
 
-/* Desktop Auth Buttons */
-.desktop-auth-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 6px;
-}
-
-.auth-link {
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text, #374151);
-  padding: 8px 14px;
-  transition: color 0.2s ease;
-}
-
-.auth-link:hover {
-  color: var(--primary, #6c2bd9);
-}
-
-.auth-btn {
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 14px;
-  padding: 8px 18px;
-  border-radius: 8px;
-  transition: all 0.25s ease;
-  text-align: center;
-}
-
-.register-btn {
-  background: var(--primary, #6c2bd9);
-  color: #ffffff !important;
-  box-shadow: 0 4px 12px rgba(108, 43, 217, 0.25);
-}
-
-.register-btn:hover {
-  background: #5b21b6;
-  transform: translateY(-1px);
-}
-
 /* ==========================================================================
-   AUTHENTICATED USER PROFILE DROPDOWN
+   PUSHED & SPACED OUT PROFILE MENU
    ========================================================================== */
 .profile-menu {
   position: relative;
+  margin-left: 8px; /* Pushes profile away from cart/language */
+  padding-left: 12px;
+  border-left: 1px solid var(--border, #e5e7eb); /* Visual separation divider */
 }
 
 .profile-btn {
-  border: none;
-  background: var(--bg, #f3f4f6);
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg, #f8fafc);
   cursor: pointer;
   color: var(--text, #1f2937);
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 8px;
+  padding: 6px 14px;
   border-radius: 24px;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .profile-btn:hover {
   background: rgba(108, 43, 217, 0.1);
+  border-color: var(--primary, #6c2bd9);
   color: var(--primary, #6c2bd9);
 }
 
 .profile-btn-name {
   font-weight: 600;
   font-size: 13.5px;
-  max-width: 90px;
+  max-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -223,7 +432,7 @@
 
 .profile-dropdown {
   position: absolute;
-  top: 50px;
+  top: 48px;
   right: 0;
   width: 250px;
   background: var(--card, #ffffff);
@@ -320,27 +529,50 @@
   background: #dc2626;
 }
 
-/* ==========================================================================
-   MOBILE TOGGLE & BACKDROP
-   ========================================================================== */
-.menu-icon {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text, #1f2937);
-  padding: 4px;
-  display: none;
-  align-items: center;
-  justify-content: center;
+.profile-guest-header {
+  padding: 6px 8px 10px 8px;
 }
 
-.nav-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
-  z-index: 998;
+.profile-guest-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text, #1f2937);
+}
+
+.profile-guest-header p {
+  margin: 4px 0 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.profile-item.primary-action {
+  background: var(--primary, #6c2bd9);
+  color: #ffffff !important;
+  font-weight: 600;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.profile-item.primary-action:hover {
+  background: #5b21b6;
+}
+
+.profile-item.secondary-action {
+  border: 1px solid var(--border, #e5e7eb);
+  justify-content: center;
+  font-weight: 600;
+}
+
+.profile-item.seller-highlight {
+  color: #16a34a;
+  font-weight: 600;
+  background: rgba(22, 163, 74, 0.08);
+}
+
+.profile-item.seller-highlight:hover {
+  background: rgba(22, 163, 74, 0.15);
+  color: #15803d;
 }
 
 /* ==========================================================================
@@ -348,57 +580,25 @@
    ========================================================================== */
 @media (max-width: 992px) {
   .navbar {
-    padding: 12px 5%;
+    padding: 12px 4%;
   }
 
   .menu-icon {
     display: flex;
-    z-index: 1001;
   }
 
-  .desktop-auth-actions {
-    display: none;
+  .desktop-only {
+    display: none !important;
   }
 
-  .nav-links {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 280px;
-    height: 100vh;
-    background: var(--card, #ffffff);
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 80px 24px 30px 24px;
-    gap: 20px;
-    transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
-    z-index: 1000;
+  .nav-search-form {
+    max-width: 240px;
   }
 
-  .nav-links.active-menu {
-    right: 0;
-  }
-
-  .nav-links a {
-    width: 100%;
-    font-size: 16px;
-    padding: 8px 0;
-  }
-
-  .mobile-auth-actions {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 10px;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(0, 0, 0, 0.08);
-  }
-
-  .login-btn {
-    border: 1px solid var(--primary, #6c2bd9);
-    color: var(--primary, #6c2bd9);
+  .profile-menu {
+    border-left: none;
+    padding-left: 0;
+    margin-left: 0;
   }
 
   .profile-btn-name {
@@ -406,17 +606,18 @@
   }
 
   .profile-btn {
-    padding: 6px;
+    padding: 8px;
+    border-radius: 50%;
   }
 }
 
-@media (max-width: 576px) {
-  .navbar {
-    padding: 10px 4%;
+@media (max-width: 680px) {
+  .nav-search-form {
+    display: none;
   }
 
   .logo img {
-    width: 115px;
+    width: 110px;
   }
 
   .nav-actions {
@@ -424,11 +625,11 @@
   }
 
   .cart-link {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
   }
 
-  .nav-links {
-    width: 82vw;
+  .currency-dropdown {
+    right: -40px;
   }
 }

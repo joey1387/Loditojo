@@ -2,6 +2,7 @@ import "./QuickView.css";
 import { AiFillStar } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useCurrency } from "../../context/CurrencyContext";
 import { Product } from "../../types/Product";
 
 type Props = {
@@ -15,6 +16,7 @@ const QuickView = ({
 }: Props) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
 
   if (!product) return null;
 
@@ -47,7 +49,7 @@ const QuickView = ({
         </div>
 
         <h3>
-          ₦{product.price.toLocaleString()}
+          {formatPrice(product.price)}
         </h3>
 
         <p>{product.category}</p>
